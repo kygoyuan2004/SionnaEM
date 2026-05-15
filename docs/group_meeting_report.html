@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<style>
+  @page {
+    size: A4;
+    margin: 2cm 2.2cm;
+    @bottom-center {
+      content: "— " counter(page) " —";
+      font-family: "Noto Sans CJK SC", sans-serif;
+      font-size: 9pt;
+      color: #888;
+    }
+  }
+  body {
+    font-family: "Noto Serif CJK SC", "AR PL UMing CN", serif;
+    font-size: 11pt;
+    line-height: 1.7;
+    color: #222;
+  }
+  h1 {
+    font-family: "Noto Sans CJK SC", sans-serif;
+    font-size: 20pt;
+    text-align: center;
+    margin: 0.8cm 0 0.3cm 0;
+    color: #1a3a5c;
+  }
+  h2 {
+    font-family: "Noto Sans CJK SC", sans-serif;
+    font-size: 14pt;
+    color: #1a3a5c;
+    border-bottom: 2px solid #2980b9;
+    padding-bottom: 4pt;
+    margin: 0.7cm 0 0.3cm 0;
+    page-break-after: avoid;
+  }
+  h3 {
+    font-family: "Noto Sans CJK SC", sans-serif;
+    font-size: 12pt;
+    color: #2c3e50;
+    margin: 0.4cm 0 0.15cm 0;
+    page-break-after: avoid;
+  }
+  .subtitle {
+    text-align: center;
+    font-size: 10pt;
+    color: #666;
+    margin-bottom: 0.6cm;
+  }
+  .divider {
+    border: none;
+    border-top: 1px solid #ccc;
+    margin: 0.5cm 0;
+  }
+  p { margin: 0.15cm 0; }
+
+  /* Code / Formula blocks */
+  .formula {
+    background: #f5f7fa;
+    border-left: 3px solid #2980b9;
+    padding: 8pt 12pt;
+    margin: 8pt 0;
+    font-family: "DejaVu Sans Mono", monospace;
+    font-size: 9.5pt;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    word-break: break-all;
+  }
+  .highlight-box {
+    background: #eaf2f8;
+    border: 1px solid #aed6f1;
+    border-radius: 4pt;
+    padding: 8pt 12pt;
+    margin: 8pt 0;
+  }
+  .insight-box {
+    background: #fef9e7;
+    border: 1px solid #f9e79f;
+    border-radius: 4pt;
+    padding: 8pt 12pt;
+    margin: 8pt 0;
+  }
+
+  /* Tables */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10pt 0;
+    font-size: 10pt;
+  }
+  th {
+    background: #2980b9;
+    color: white;
+    padding: 6pt 8pt;
+    text-align: left;
+    font-family: "Noto Sans CJK SC", sans-serif;
+  }
+  td {
+    padding: 5pt 8pt;
+    border: 1px solid #ddd;
+  }
+  tr:nth-child(even) { background: #f9f9f9; }
+
+  /* Lists */
+  ul, ol { margin: 4pt 0; padding-left: 1.4em; }
+  li { margin: 2pt 0; }
+
+  /* Two-column */
+  .two-col {
+    display: flex;
+    gap: 16pt;
+  }
+  .two-col > div { flex: 1; }
+
+  /* Tags */
+  .tag {
+    display: inline-block;
+    background: #2980b9;
+    color: white;
+    padding: 1pt 8pt;
+    border-radius: 10pt;
+    font-size: 8pt;
+    font-family: "Noto Sans CJK SC", sans-serif;
+    margin-right: 4pt;
+  }
+  .tag-green { background: #27ae60; }
+  .tag-orange { background: #e67e22; }
+
+  /* Page breaks */
+  .page-break { page-break-before: always; }
+
+  /* Compact section */
+  .compact p { margin: 2pt 0; }
+</style>
+</head>
+<body>
+
+<h1>Micro-Doppler 集成到 Sionna RT</h1>
+<p class="subtitle">调研汇报 &amp; 仿真验证计划 &nbsp;|&nbsp; 2026年5月14日</p>
+
+<hr class="divider">
+
+<h2>一、问题背景与核心问题</h2>
+
+<p><strong>总目标：</strong>探究 Micro-Doppler 能否集成到 Sionna RT 中，用于仿真多旋翼 UAV 的微多普勒特征。</p>
+
+<div class="highlight-box">
+<strong>三个核心问题：</strong>
+<ol>
+  <li><strong>公式层面的区别</strong> — 标准 Doppler 和 Micro-Doppler 在计算上有什么不同？</li>
+  <li><strong>代码层面的定位</strong> — 这个区别在 Sionna 代码中对应哪个位置？改动点在哪里？</li>
+  <li><strong>可行性判断</strong> — 是否只是公式的简单区别，比较好找到位置直接加？</li>
+</ol>
+</div>
+
+<h2>二、公式层面：标准 Doppler vs Micro-Doppler</h2>
+
+<div class="two-col">
+<div>
+<h3>标准 Doppler</h3>
+<p>频移是<strong>常数</strong>，相位为线性斜坡：</p>
+<div class="formula">a_i(t) = a_i · e^{-j2πfτ_i} · e^{j2π f_Δ t}</div>
+<p>其中 f_Δ 由 TX/RX 相对速度决定，每条路径为固定常数。</p>
+<p>→ 相位变化：<strong>线性</strong>，斜率为 2πf_Δ</p>
+</div>
+<div>
+<h3>Micro-Doppler</h3>
+<p>频移是<strong>时变的</strong>（旋转叶片产生周期性调制）：</p>
+<div class="formula">φ(t) = 2π f_Δ t + β·sin(2π f_rot t + φ₀)</div>
+<p>调制指数 β = (4πR/λ)·cos(θ)，由叶片半径 R、转速 f_rot、波长 λ 决定。</p>
+<p>→ 相位变化：线性斜坡 <strong>+ 正弦调制</strong></p>
+</div>
+</div>
+
+<div class="insight-box">
+<strong>关键差异：</strong>标准 Doppler → 频谱上单一频移峰；Micro-Doppler → 频谱上出现以 f_rot 为间距的边带族，形成特征性 "helicopter signature" 图案。
+</div>
+
+<h2>三、Sionna 现有流程与改动定位</h2>
+
+<p>Sionna 当前流程：<strong>射线追踪 → 路径参数 (a, τ, angles) → 电磁系数 → CIR</strong></p>
+
+<table>
+<tr><th>环节</th><th>文件</th><th>功能</th><th>是否需改动</th></tr>
+<tr><td>射线追踪</td><td><code>path_solvers/path_solver.py</code></td><td>路径求解入口</td><td>❌ 不需改动</td></tr>
+<tr><td>路径缓冲</td><td><code>path_solvers/paths_buffer.py</code></td><td>路径计算缓冲</td><td>❌ 不需改动</td></tr>
+<tr><td>场计算</td><td><code>path_solvers/field_calculator.py</code></td><td>电磁场系数 &amp; 延迟</td><td>❌ 不需改动</td></tr>
+<tr style="background:#fef9e7;"><td><strong>CIR 生成</strong></td><td><strong><code>path_solvers/paths.py → cir()</code></strong></td><td><strong>合成信道冲激响应</strong></td><td><strong>✅ 改动点</strong></td></tr>
+</table>
+
+<div class="highlight-box">
+<strong>核心结论：</strong>Micro-Doppler 可以<strong>不修改射线追踪引擎</strong>，仅在 CIR 生成阶段给每条路径系数叠加正弦相位调制。射线追踪负责静态场景路径发现，旋转叶片的时变效应通过<strong>后处理叠加</strong>到路径系数上。
+</div>
+
+<h2>四、三步仿真验证计划</h2>
+
+<h3>第一步：Baseline — 标准 Doppler 验证 <span class="tag">进行中</span></h3>
+
+<div class="compact">
+<p><strong>目标：</strong>用 Sionna RT 仿真移动 UE，验证能正确观察到标准 Doppler 频移，建立对照基线。</p>
+<p><strong>方法：</strong>UE 沿 x 轴匀速移动 (v=10 m/s)，以 Δt=0.5ms 采集 100 个 CIR 快照，从相位差提取 Doppler 频移。</p>
+<p><strong>预期：</strong>直达径 Doppler ≈ 933 Hz (28 GHz 载频)，相位随时间线性变化。</p>
+</div>
+
+<table>
+<tr><th>参数</th><th>值</th><th>参数</th><th>值</th></tr>
+<tr><td>载频 fc</td><td>28 GHz</td><td>UE 速度</td><td>10 m/s (沿 x 轴)</td></tr>
+<tr><td>采样间隔 Δt</td><td>0.5 ms</td><td>快照数</td><td>100</td></tr>
+<tr><td>场景</td><td colspan="3">Paris (etoile)</td></tr>
+</table>
+
+<h3>第二步：核心验证 — 单旋转散射点 Micro-Doppler <span class="tag tag-orange">计划中</span></h3>
+
+<div class="compact">
+<p><strong>目标：</strong>证明 Sionna RT 能捕获旋转运动产生的正弦相位调制。</p>
+<p><strong>方法：</strong>建模单个旋转叶片散射点 (R=0.15m, f_rot=100Hz)，以 2kHz 采样率采集 100 个快照，提取瞬时相位和瞬时频率。</p>
+<p><strong>预期：</strong>调制指数 β ≈ 175.9 rad，瞬时频率呈正弦波动，相位呈现 φ(t) = 2πf_Δt + βsin(2πf_rot t) 形态。</p>
+</div>
+
+<h3>第三步：应用验证 — 多旋翼 UAV 谱图 <span class="tag tag-orange">计划中</span></h3>
+
+<div class="compact">
+<p><strong>目标：</strong>生成完整四旋翼 UAV 的 Micro-Doppler 时频谱图，证明可用于检测/分类。</p>
+<p><strong>方法：</strong>4 旋翼 / 8 叶片完整 UAV 模型 → CIR 序列 → STFT → Micro-Doppler 谱图。</p>
+<p><strong>预期：</strong>谱图中清晰可见周期性调制，边带间距 = 100 Hz，呈现经典 helicopter signature。</p>
+</div>
+
+<div class="page-break"></div>
+
+<h2>五、环境配置（已验证通过 ✅）</h2>
+
+<table>
+<tr><th>组件</th><th>版本</th><th>状态</th></tr>
+<tr><td>Python</td><td>3.11.15</td><td>✅ conda 环境 sionna_rt</td></tr>
+<tr><td>Sionna / Sionna RT</td><td>2.0.1</td><td>✅ 可导入，场景加载/路径求解正常</td></tr>
+<tr><td>TensorFlow</td><td>2.20.0</td><td>✅ GPU 可见 (RTX 4090, 24GB)</td></tr>
+<tr><td>CUDA Toolkit / Driver</td><td>13.0.2 / 12.8</td><td>✅</td></tr>
+<tr><td>Mitsuba</td><td>3.8.0</td><td>✅ CUDA 变体可用</td></tr>
+<tr><td>PyTorch</td><td>2.11.0</td><td>✅ CUDA 可用</td></tr>
+</table>
+
+<p>编写了环境验证脚本 <code>verify_sionna_rt_env.py</code>（316行，12项检查全部通过），涵盖：基础依赖、GPU 检测、Sionna 核心包、场景加载、天线配置、设备放置、射线追踪求解、CIR 生成、Doppler 频移验证、Mitsuba 渲染器、PyTorch 检测。</p>
+
+<h2>六、文献调研</h2>
+
+<table>
+<tr><th>论文</th><th>侧重</th><th>关键收获</th></tr>
+<tr>
+  <td>Micro-Doppler Signature Simulation of Multirotor UAVs Using Ray Tracing</td>
+  <td><span class="tag">方法</span></td>
+  <td>射线追踪仿真多旋翼 UAV micro-Doppler 的完整流程；散射点建模方法；射线追踪处理旋转部件的策略</td>
+</tr>
+<tr>
+  <td>Micro-Doppler Signature-Based Detection, Classification and Localization of Small UAV</td>
+  <td><span class="tag">应用</span></td>
+  <td>Micro-Doppler 特征提取方法；基于谱图的 UAV 检测/分类算法；时频分析参数选择</td>
+</tr>
+</table>
+
+<h2>七、可行性结论</h2>
+
+<div class="highlight-box">
+<table>
+<tr><th>核心问题</th><th>结论</th></tr>
+<tr><td>能不能做？</td><td><strong>可以。</strong>只需在 CIR 生成阶段叠加时变相位调制，不涉及 RT 核心引擎改动。</td></tr>
+<tr><td>难度多大？</td><td><strong>中等偏低。</strong>核心是理解现有代码流程 + 数学推导，代码量不大。</td></tr>
+<tr><td>改动在哪？</td><td><code>paths.py</code> 的 <code>cir()</code> 方法附近，新增 <code>MicroDopplerModulator</code> 类。</td></tr>
+<tr><td>工作量？</td><td><strong>约 1–2 周</strong>（代码约 200 行），含仿真验证实验。</td></tr>
+<tr><td>新增参数？</td><td>叶片数量 N_blades、旋转频率 f_rot、叶片半径 R、初始相位 φ₀。</td></tr>
+</table>
+</div>
+
+<h2>八、下一步计划</h2>
+
+<ol>
+  <li><strong>完成三步仿真验证</strong>（2周）
+    <ul>
+      <li>第一步已在环境验证脚本中完成 Doppler 频移提取框架</li>
+      <li>第二步和第三步需要编写完整的仿真脚本</li>
+    </ul>
+  </li>
+  <li><strong>实现 MicroDopplerModulator 模块</strong>（1周）
+    <ul>
+      <li>基于三步验证的结论，将相位调制逻辑封装为可复用模块</li>
+      <li>与现有 Sionna Paths 类对接</li>
+    </ul>
+  </li>
+  <li><strong>撰写学术报告 / 小论文</strong>（1–2周）
+    <ul>
+      <li>整理仿真结果（Doppler 频谱对比图、Micro-Doppler 时频谱图）</li>
+      <li>公式推导 + 实现方案 + 实验结果</li>
+    </ul>
+  </li>
+</ol>
+
+<h2>九、当前进展总结</h2>
+
+<table>
+<tr><th>事项</th><th>状态</th><th>产出</th></tr>
+<tr><td>文献调研</td><td><span class="tag tag-green">已完成</span></td><td>调研报告 PDF + 思考框架文档</td></tr>
+<tr><td>公式推导</td><td><span class="tag tag-green">已完成</span></td><td>标准 Doppler vs Micro-Doppler 公式对比</td></tr>
+<tr><td>代码定位</td><td><span class="tag tag-green">已完成</span></td><td>Sionna RT 流程走读，确定改动点在 cir()</td></tr>
+<tr><td>环境配置</td><td><span class="tag tag-green">已完成</span></td><td>12项检查全部通过，验证脚本可复用</td></tr>
+<tr><td>三步验证计划</td><td><span class="tag tag-green">已完成</span></td><td>详细的参数表、预期结果、产出定义</td></tr>
+<tr><td>基线 Doppler 仿真</td><td><span class="tag">进行中</span></td><td>框架已就绪，需完成完整数据采集</td></tr>
+<tr><td>Micro-Doppler 仿真</td><td><span class="tag tag-orange">待开始</span></td><td>依赖基线验证完成后启动</td></tr>
+</table>
+
+<hr class="divider">
+<p style="text-align:center; color:#888; font-size:9pt;">— End —</p>
+
+</body>
+</html>
