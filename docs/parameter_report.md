@@ -106,7 +106,7 @@
 | 波长 | **λ** / `wavelength` | 波长 | Wavelength | 计算 `c/f_c` | 电磁波的空间周期 | m | 10.7 mm (28 GHz); 85.7 mm (3.5 GHz); 32.8 cm (915 MHz) | 与 β_m 成反比；λ 越小 β_m 越大；X 波段到毫米波的变化可让调制指数增加 20+ 倍 |
 | 带宽 | **B** / `bandwidth` | 系统带宽 | System bandwidth | Scene 配置; `--bandwidth` | 发射信号的总频率范围 | Hz | 122.88e6 (5G NR 参考); 100e6 (Sub-6); 400e6+ (mmWave) | 影响距离分辨率 Δr = c/(2B)；宽带宽可分辨单个散射体（扩展目标效应） |
 | 采样率 | **f_s** / `sampling_rate` | 基带采样率 | Baseband sampling rate | `UAVMicroDopplerConfig.sampling_rate` | ADC 采样频率 | Hz | 50000 (项目 step3+); 32000 (论文 TGRS); 2000 (项目 step1-2) | 必须满足 Nyquist 条件：f_s > 2×f_dev_peak；采样不足会导致微多普勒混叠 |
-| 子载波间隔 | **Δf** / `scs` | OFDM 子载波间隔 | Subcarrier spacing | `tools/CIR_to_CFR/` | OFDM 相邻子载波间的频率间隔 | Hz | 120e3 (=122.88e6/1024) | 影响最大可测量多普勒范围和符号间干扰 |
+| 子载波间隔 | **Δf** / `scs` | OFDM 子载波间隔 | Subcarrier spacing | `tools/cir_to_cfr/` | OFDM 相邻子载波间的频率间隔 | Hz | 120e3 (=122.88e6/1024) | 影响最大可测量多普勒范围和符号间干扰 |
 | 子载波数 | **K** | OFDM 子载波数 | Number of subcarriers | `--num-subcarriers` | OFDM 子载波总数 | 无量纲 | 1024 (默认) | K 越大频率分辨率越细；CFR 张量 `[num_tx, num_rx, K]` |
 
 ### 3.2 功率与噪声参数

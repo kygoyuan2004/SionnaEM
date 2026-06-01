@@ -26,12 +26,15 @@ if str(ROOT) not in sys.path:
 # Import your CIR->CFR utilities
 # ------------------------------------------------------------
 try:
-    from scene.dataset_CIR_to_CFR import load_cir_dataset, cfr_from_cir_single, _subcarrier_offsets
+    from dataset_CIR_to_CFR import load_cir_dataset, cfr_from_cir_single, _subcarrier_offsets
 except Exception as e:
-    raise ImportError(
-        "Cannot import cir_to_cfr.py. Put it in the same folder or add to PYTHONPATH. "
-        f"Original error: {repr(e)}"
-    )
+    try:
+        from cir_to_cfr.dataset_CIR_to_CFR import load_cir_dataset, cfr_from_cir_single, _subcarrier_offsets
+    except Exception:
+        raise ImportError(
+            "Cannot import dataset_CIR_to_CFR. Put it in the same folder or add to PYTHONPATH. "
+            f"Original error: {repr(e)}"
+        )
 
 # ------------------------------------------------------------
 # Defaults (you can override in HLSOnTheFly init)

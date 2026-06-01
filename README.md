@@ -18,197 +18,100 @@ SionnaEM/
 ├── requirements.txt                             # Python 依赖清单
 ├── .gitignore                                   # Git 忽略规则
 │
-├── src/                                         # 核心源代码（~15 个脚本，约 3000+ 行）
+├── src/                                         # 核心源代码（14 个脚本）
 │   │
 │   ├── step1_baseline_doppler.py                # [Step 1] 标准 Doppler 基线验证
-│   │                                            #   UE 沿 x 轴匀速运动，在 Paris etoile 场景中
-│   │                                            #   采集 100 次 CIR 快照，从 LOS 路径相位提取
-│   │                                            #   Doppler 频移，与理论值和 PathSolver 内置值
-│   │                                            #   对比验证（28 GHz 载波，Doppler ≈ 933 Hz）
-│   │
 │   ├── step2_single_scatterer.py                # [Step 2] 单散射点 Micro-Doppler 验证
-│   │                                            #   验证核心公式 β = 4πR/λ（单基地往返），
-│   │                                            #   单个旋转散射点在 CIR 相位上产生正弦调制，
-│   │                                            #   通过 STFT 谱图展示 Micro-Doppler 特征
-│   │
 │   ├── step3_quadrotor_spectrogram.py           # [Step 3] 四旋翼 UAV 谱图生成
-│   │                                            #   构建完整四旋翼模型（4 旋翼 × 2 叶片 →
-│   │                                            #   8 叶片散射点 + 1 机身体），叠加 STFT
-│   │                                            #   生成经典"直升机特征"时频图，展示：
-│   │                                            #   体 Doppler 线、宽带 Micro-Doppler 扩展、
-│   │                                            #   叶片闪烁周期性、谐波边带结构
-│   │
 │   ├── micro_doppler_modulator.py               # [Step 4] MicroDopplerModulator 核心模块
-│   │                                            #   将 Step 1-3 的验证模型封装为可复用模块：
-│   │                                            #   · UAVMicroDopplerConfig — 参数数据类
-│   │                                            #   · MicroDopplerModulator — 正弦相位调制引擎
-│   │                                            #   支持独立信号生成和 Sionna CIR 后处理两种模式
-│   │
-│   ├── verify_modulator.py                      # [Step 4 配套] Modulator 系统验证
-│   │                                            #   26 项自动化测试，涵盖：
-│   │                                            #     A 层 — 与 Step 3 交叉验证（谱图一致性）
-│   │                                            #     B 层 — 真实 Sionna RT CIR 集成验证
-│   │                                            #     C 层 — 物理一致性及边缘情况
-│   │
+│   ├── verify_modulator.py                      # [Step 4] Modulator 系统验证（26 项测试）
 │   ├── micro_doppler_integration_demo.py        # [Step 5] CIR 管道集成演示
-│   │                                            #   将 MicroDopplerModulator 嵌入 Sionna RT
-│   │                                            #   CIR 管线，3 个场景验证：
-│   │                                            #   · Paris LOS（自由空间基线）
-│   │                                            #   · Paris Multipath（depth=5）
-│   │                                            #   · floor_wall 简化场景
-│   │
 │   ├── step6_static_drone_scene.py              # [Step 6] 静态无人机场景信道图
-│   │                                            #   在 Sionna RT 场景中放置无人机模型，
-│   │                                            #   配置 3 个基站、双频段（3.5/28 GHz），
-│   │                                            #   使用 PathSolver + RadioMapSolver 生成
-│   │                                            #   多基站信道图和路径损耗图
-│   │
 │   ├── step7_dynamic_drone_demo.py              # [Step 7] 动态无人机演示
-│   │                                            #   两种工作模式：
-│   │                                            #   · Mode A（逐步 RT）：每步更新位置 → 重新
-│   │                                            #                      追踪 → 重算无线电地图
-│   │                                            #   · Mode B（快速 CIR 调制）：一次 RT →
-│   │                                            #      CIR 后处理叠加 Micro-Doppler → 实时谱图
-│   │
-│   ├── verify_sionna_rt_env.py                  # 环境验证工具
-│   │                                            #   逐项检查 Sionna RT 各组件的安装和可用性
-│   │
-│   ├── paper_fig2_style_mds.py                  # 论文 Fig.2 风格 Micro-Doppler 谱图复现
-│   │                                            #   参照 Sun et al. IEEE TGRS 2021 的参数设定
-│   │                                            #   （915 MHz 载波，32 kHz 采样率），生成
-│   │                                            #   微直升机 vs 四旋翼对比谱图
-│   │
-│   ├── rt_micro_doppler_vs_standard_doppler.py  # RT 原生 Micro-Doppler vs 标准 Doppler 对比
-│   │                                            #   不使用 MicroDopplerModulator，而是每次
-│   │                                            #   快照直接用 RT 求解叶片散射点位置变化
-│   │                                            #   导致的相位调制（最"诚实的"物理仿真）
-│   │
-│   └── rt_micro_doppler_vs_standard_doppler_single.py  # 单旋翼版本（两叶片直升机模型）
-│                                                        #   在上文件基础上简化为单个旋翼，
-│                                                        #   用于更清晰的单向 RT 信号对比
-│
-├── pipeline/                                    # 端到端仿真管线（Blender → Sionna → 输出）
-│   │
 │   ├── step8_blender_scene_interface.py         # [Step 8] Blender 场景接口
-│   │                                            #   统一场景加载入口，支持三种来源：
-│   │                                            #   1. Mitsuba XML 直出（推荐）
-│   │                                            #   2. PLY 中转（Blender 导出 PLY →
-│   │                                            #      generate_scene_xml.py → load_scene）
-│   │                                            #   3. 程序化回退（代码直接生成）
-│   │                                            #   提供 BlenderSceneSpec 数据类封装
-│   │
 │   ├── step9_pipeline_pathloss_csi.py           # [Step 9] 完整管线：Pathloss + CSI
-│   │                                            #   端到端管线：场景加载 → PathSolver 传播
-│   │                                            #   路径求解 → CIR 提取 → CSI 张量构建
-│   │                                            #   （CIR + CFR）→ RadioMapSolver 无线电
-│   │                                            #   地图 → 3D 场景渲染 → 9 张可视化图 +
-│   │                                            #   .npz 数据输出，支持 --ofdm 模式
-│   │
-│   ├── parameter_report.md / .pdf               # 参数报告（含 Blender 导出参数与 Sionna
-│   │                                            #   RT 参数对照表）
-│   ├── parameter_report_pdf_tables.md / .pdf    # 参数报告的表格精简版
-│   ├── pipeline_report.md                       # 管线工作总结报告
-│   ├── variable_reference.md                    # 变量/参数快速参考手册
-│   ├── data/                                    # 管线输出数据目录
-│   └── figures/                                 # 管线输出图表目录
+│   ├── verify_sionna_rt_env.py                  # 环境验证工具
+│   ├── paper_fig2_style_mds.py                  # 论文 Fig.2 风格 Micro-Doppler 谱图复现
+│   ├── rt_micro_doppler_vs_standard_doppler.py  # RT 原生 Micro-Doppler vs 标准 Doppler 对比
+│   └── rt_micro_doppler_vs_standard_doppler_single.py  # 单旋翼版本
+│
+├── pipeline/                                    # 管线输出目录
+│   ├── data/                                    #   管线输出数据 (.npz)
+│   └── figures/                                 #   管线输出图表
 │
 ├── tools/                                       # 辅助工具集
 │   │
-│   ├── blender_to_sionna/                       # Blender → Sionna RT 场景导入工具
-│   │   ├── README.md                            #   工具使用说明（中英双语流程）
-│   │   └── generate_scene_xml.py                #   场景 XML 生成器：将 Blender 导出的
-│   │                                            #   PLY 文件 + 材质映射 JSON → Mitsuba
-│   │                                            #   XML 场景文件（Sionna RT 兼容格式）
+│   ├── blender_to_sionna/                       # Blender → Sionna RT 场景导入
+│   │   ├── generate_scene_xml.py                #   场景 XML 生成器
+│   │   └── README.md                            #   工具使用说明
 │   │
-│   ├── CIR_to_CFR/                              # CIR → CFR 转换工具集
-│   │   ├── dataset_CIR_to_CFR.py                #   从 CIR NPZ 数据集在线重建完整 CFR
-│   │   │                                        #   支持 per-antenna CIR → OFDM CFR 张量
-│   │   └── Hgt_transform_to_HLS.py              #   CIR → CFR → 导频 LS 估计 → HLS
-│   │                                            #   在线生成链路级信道估计，用于训练/
-│   │                                            #   推理管线（K=1024 子载波，T=14 OFDM符号）
+│   ├── cir_to_cfr/                              # CIR → CFR 转换工具
+│   │   ├── dataset_CIR_to_CFR.py                #   CIR → OFDM CFR 张量重建
+│   │   └── Hgt_transform_to_HLS.py              #   CIR → CFR → 导频 LS 估计
 │   │
-│   ├── scene_create/                            # 场景数据集生成工具
-│   │   ├── sence_dataset_create_normal.py       #   通用 RT 场景 CIR 数据集批量生成
-│   │   └── sence_dataset_create_paris.py        #   Paris 场景专用 CIR 数据集生成
+│   ├── scene_dataset/                           # 场景数据集批量生成
+│   │   ├── scene_dataset_create_normal.py       #   通用 RT 场景
+│   │   └── scene_dataset_create_paris.py        #   Paris 场景专用
 │   │
 │   ├── md_to_pdf.py                             # Markdown → PDF 转换器
-│   │                                            #   基于 markdown + weasyprint，支持
-│   │                                            #   中文字体（Noto Sans CJK SC），用于
-│   │                                            #   将 docs/ 下 md 文档批量转为 PDF
-│   │
-│   ├── modify_ppt.py                            # PPT 修改工具
-│   │                                            #   基于 python-pptx，用于自动插入导出
-│   │                                            #   图表到组会 PPT 模板中，支持图片替换、
-│   │                                            #   新增幻灯片、定量标注等功能
-│   │
+│   ├── modify_ppt.py                            # PPT 自动修改工具
 │   └── parameter_report_pdf.py                  # 参数报告 PDF 生成器
-│                                                #   将 parameter_report.md 转为适合会议
-│                                                #   阅读的 PDF（精简表格列、优化排版）
 │
 ├── docs/                                        # 项目文档与阶段报告
 │   │
-│   ├── 调研问题与思考框架.md                       # 初期调研问题梳理与研究思路
-│   ├── Micro_Doppler_Validation_Plan.md          # Micro-Doppler 三步验证计划方案
-│   ├── Micro_Doppler_Sionna_RT_三步验证报告.md/.pdf # Step 1-3 验证结果汇总
-│   ├── 后续三步计划_第四至六步.md                  # Step 4-6 工作规划
-│   ├── Step4_完成报告.md/.pdf                    # Step 4（Modulator 模块化）完成报告
-│   ├── Step5_完成报告.md/.pdf                    # Step 5（CIR 管道集成验证）完成报告
-│   ├── SionnaEM_Project_Structure_Analysis.md/.pdf # 项目结构总览与分析
-│   ├── SionnaEM_项目成果汇报.pdf                   # 综合成果汇报（含嵌入图示）
-│   ├── SionnaEM_项目问答汇总.pdf                   # 技术问答汇总（含局限性分析）
+│   ├── research_questions.md                    # 初期调研问题梳理
+│   ├── Micro_Doppler_Validation_Plan.md          # 三步验证计划
+│   ├── three_step_validation_report.md/.pdf      # Step 1-3 验证结果
+│   ├── steps_4to6_plan.md                       # Step 4-6 工作规划
+│   ├── Step4_完成报告.md/.pdf                    # Step 4 完成报告
+│   ├── Step5_完成报告.md/.pdf                    # Step 5 完成报告
+│   ├── SionnaEM_Project_Structure_Analysis.md/.pdf # 项目结构分析
+│   ├── project_achievement_report.pdf            # 综合成果汇报
+│   ├── project_qa_summary.pdf                    # 技术问答汇总
 │   ├── Technical_QA.md/.pdf                     # 技术问题问答
 │   ├── Work_Summary.md/.pdf                     # 工作总结
-│   ├── Blender_Sionna_MicroDoppler_Chain.md/.pdf  # Blender → Sionna → Micro-Doppler
-│   │                                            #   全链路技术文档
+│   ├── Blender_Sionna_MicroDoppler_Chain.md/.pdf  # Blender 全链路技术文档
 │   ├── Blender_Tutorial_Beginner.md/.pdf         # Blender 入门教程
-│   ├── BS_Parameter_Reference.md/.pdf            # 基站参数参考手册
+│   ├── BS_Parameter_Reference.md/.pdf            # 基站参数参考
 │   ├── Collaboration_Platform_Research.md/.pdf   # 协作平台调研
-│   └── group_meeting_report.html/.pdf            # 组会汇报 HTML/PDF
+│   ├── group_meeting_report.html/.pdf            # 组会汇报
+│   ├── parameter_report.md/.pdf                  # 参数报告
+│   ├── parameter_report_tables.md/.pdf           # 参数报告（表格版）
+│   ├── pipeline_report.md                        # 管线工作总结
+│   └── variable_reference.md                     # 变量/参数快速参考
 │
-├── figures/                                     # 产出图表（~18 张）
-│   │
-│   ├── baseline_doppler_etoile.png              # Step 1：标准 Doppler 基线验证图
-│   ├── baseline_doppler_wrapped_phase.png        # Step 1：包裹相位可视化
-│   ├── micro_doppler_single_scatterer.png        # Step 2：单散射点 Micro-Doppler 谱图
-│   ├── micro_doppler_quadrotor_spectrogram.png   # Step 3：四旋翼 UAV Micro-Doppler 谱图
-│   ├── micro_doppler_modulator_validation.png    # Step 4：Modulator 交叉验证结果
-│   ├── modulator_verification.png                # Step 4：Modulator 多场景验证
-│   ├── integration_paris_los.png                 # Step 5：Paris LOS 集成验证
-│   ├── integration_paris_multipath.png           # Step 5：Paris 多径集成验证
-│   ├── integration_floor_wall.png                # Step 5：floor_wall 场景集成验证
-│   ├── integration_summary.png                   # Step 5：集成管线总结图
-│   ├── micro_doppler_cir_diagnostics.png         # CIR 调制诊断图
+├── figures/                                     # 产出图表（~18 张 PNG）
+│   ├── baseline_doppler_etoile.png              # Step 1：标准 Doppler 基线
+│   ├── baseline_doppler_wrapped_phase.png        # Step 1：包裹相位
+│   ├── micro_doppler_single_scatterer.png        # Step 2：单散射点谱图
+│   ├── micro_doppler_quadrotor_spectrogram.png   # Step 3：四旋翼谱图
+│   ├── micro_doppler_modulator_validation.png    # Step 4：Modulator 交叉验证
+│   ├── modulator_verification.png                # Step 4：多场景验证
+│   ├── integration_paris_los.png                 # Step 5：Paris LOS 集成
+│   ├── integration_paris_multipath.png           # Step 5：Paris 多径集成
+│   ├── integration_floor_wall.png                # Step 5：floor_wall 场景
+│   ├── integration_summary.png                   # Step 5：集成管线总结
+│   ├── micro_doppler_cir_diagnostics.png         # CIR 调制诊断
 │   ├── micro_doppler_modulation_analysis.png     # 调制深度和谐波分析
-│   ├── micro_doppler_modulation_frequency.png    # 调制频率成分分析
-│   ├── micro_doppler_uav_vs_noise.png            # UAV Micro-Doppler 检测对比度
-│   ├── micro_doppler_stationary_vs_moving.png    # 静止 vs 运动 UAV 谱图对比
-│   ├── micro_doppler_vs_standard_doppler.png     # Micro-Doppler vs 标准 Doppler 对比
+│   ├── micro_doppler_modulation_frequency.png    # 调制频率成分
+│   ├── micro_doppler_uav_vs_noise.png            # UAV 检测对比度
+│   ├── micro_doppler_stationary_vs_moving.png    # 静止 vs 运动 UAV
+│   ├── micro_doppler_vs_standard_doppler.png     # Micro-Doppler vs 标准 Doppler
 │   ├── single_rotor_micro_doppler_vs_standard_doppler.png  # 单旋翼 RT 对比
-│   └── paper_fig2_style_microhelicopter_vs_quadcopter.png  # 论文风格对比图
+│   └── paper_fig2_style_microhelicopter_vs_quadcopter.png  # 论文风格对比
 │
-├── ppt_assets_uav/                              # 组会 PPT 素材与图解
-│   ├── asset_manifest.md                        #   素材清单与对应关系
-│   ├── image_explanations.html                  #   图片图解说明（HTML）
-│   ├── UAV_MicroDoppler_图片图解说明.pdf          #   图片图解说明（PDF）
-│   └── p16_*.png / p20_*.png / p21_*.png / p22_*.png  # 按 PPT 页码组织的图表导出
+├── ppt_assets_uav/                              # 组会 PPT 素材文档
+│   ├── asset_manifest.md                        #   素材清单
+│   ├── image_explanations.html                  #   图片图解说明
+│   └── UAV_MicroDoppler_图片图解说明.pdf          #   图解说明 PDF
 │
-├── group_pre/                                   # 组会汇报材料
-│   ├── 0521组会汇报.pptx                        #   原始 PPT
-│   ├── 0521组会汇报_improved.pptx                #   改进版 PPT（含自生成图）
-│   └── 0521组会汇报.pdf                         #   PDF 导出
+├── papers/                                      # 参考论文
+│   ├── Micro-Doppler_Signature-Based_Detection_Classification_and_Localization_of_Small_UAV.pdf
+│   ├── Micro-Doppler_Signature_Simulation_of_Multirotor_UAVs_Using_Ray_Tracing.pdf
+│   └── Micro_Doppler_Sionna_RT_调研报告.pdf
 │
-├── 0601/                                        # 6月1日汇报材料
-│   ├── 参数.pdf                                  #   参数说明文档
-│   ├── 参数_code.pdf                             #   参数与代码对照
-│   ├── 参数_合并版.pdf                            #   参数合并版
-│   ├── 汇报指南.md                                #   汇报指南
-│   └── 汇报指南.pdf                               #   汇报指南 PDF
-│
-├── RT_tutorial/                                 # Sionna RT 官方教程与单元测试
-│   └── sionna-rt/                               #   （.gitignore 排除，需自行获取）
-│
-└── sionna-large-radio-maps/                     # Sionna 大尺度无线电地图库
-    └── ...                                      #   （.gitignore 排除，需自行获取）
+├── RT_tutorial/                                 # Sionna RT 官方教程（.gitignore 排除）
+└── sionna-large-radio-maps/                     # Sionna 大尺度无线电地图库（.gitignore 排除）
 ```
 
 ---
@@ -224,8 +127,8 @@ SionnaEM/
 | Step 5 | CIR 管道集成验证 | `micro_doppler_integration_demo.py` | 3 场景 RT + 调制 + STFT 完整管线 | ✓ 完成 |
 | Step 6 | 静态无人机场景 | `step6_static_drone_scene.py` | 多基站双频段信道图与路径损耗图 | ✓ 完成 |
 | Step 7 | 动态无人机演示 | `step7_dynamic_drone_demo.py` | Mode A（逐步RT）和 Mode B（快速调制） | ✓ 完成 |
-| Step 8 | Blender 场景接口 | `pipeline/step8_blender_scene_interface.py` | 三种场景来源统一加载 | ✓ 完成 |
-| Step 9 | 端到端管线 | `pipeline/step9_pipeline_pathloss_csi.py` | Blender → RT → Pathloss + CSI 完整管线 | ✓ 完成 |
+| Step 8 | Blender 场景接口 | `step8_blender_scene_interface.py` | 三种场景来源统一加载 | ✓ 完成 |
+| Step 9 | 端到端管线 | `step9_pipeline_pathloss_csi.py` | Blender → RT → Pathloss + CSI 完整管线 | ✓ 完成 |
 | Step 10 | 论文对标与参数扫描 | 多 UAV 配置参数扫描 | — | 待开展 |
 
 ---
@@ -316,12 +219,12 @@ python rt_micro_doppler_vs_standard_doppler_single.py  # 单旋翼（2 叶片直
 ### 5. 端到端管线（Step 8-9）
 
 ```bash
-cd pipeline
+cd src
 
 # Step 8: 加载场景（三种来源）
 python step8_blender_scene_interface.py
 
-# Step 9: 完整管线
+# Step 9: 完整管线 — 输出到 pipeline/data/ 和 pipeline/figures/
 python step9_pipeline_pathloss_csi.py                              # 默认：双频段
 python step9_pipeline_pathloss_csi.py --freq 28                    # 仅 28 GHz
 python step9_pipeline_pathloss_csi.py --ofdm                       # 启用 OFDM CFR
@@ -411,7 +314,7 @@ a_dyn, tau_dyn = mod.modulate_cir(a_static, tau_static, t)
 - **静态多径结构** — 时延不随时间变化，但实际中 UAV 的移动会导致路径时延的缓变
 - **无环境动态交互** — 未考虑 UAV 旋转叶片对周围环境反射模式的改变
 
-详见 `docs/SionnaEM_项目问答汇总.pdf` 第三章和 `docs/Technical_QA.md`。
+详见 `docs/project_qa_summary.pdf` 第三章和 `docs/Technical_QA.md`。
 
 ---
 

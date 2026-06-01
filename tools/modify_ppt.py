@@ -21,7 +21,6 @@ from pptx.enum.text import PP_ALIGN, MSO_ANCHOR
 
 # ── Paths ────────────────────────────────────────────────────────────────
 PPTX_PATH = os.path.expanduser("~/SionnaEM/group_pre/0521组会汇报.pptx")
-ASSETS_DIR = os.path.expanduser("~/SionnaEM/ppt_assets_uav")
 FIGURES_DIR = os.path.expanduser("~/SionnaEM/figures")
 OUTPUT_PATH = os.path.expanduser("~/SionnaEM/group_pre/0521组会汇报_improved.pptx")
 
@@ -234,7 +233,7 @@ def modify_slide18_intro(prs):
     print(f"    Removed {len(pics_to_remove)} original paper images")
 
     # Add our self-generated quadrotor spectrogram on the right side
-    img_path = os.path.join(ASSETS_DIR, "p21_quadrotor_spectrogram_full.png")
+    img_path = os.path.join(FIGURES_DIR, "micro_doppler_quadrotor_spectrogram.png")
     if os.path.exists(img_path):
         add_image(slide, img_path,
                   left=Inches(5.8), top=Inches(1.05),
@@ -350,7 +349,7 @@ def modify_slide23_paper2(prs):
     print("  Modifying Slide 23 (Paper 2 - Sionna RT MDS)...")
 
     # Add our integration pipeline figure
-    img_path = os.path.join(ASSETS_DIR, "p20_integration_pipeline_summary.png")
+    img_path = os.path.join(FIGURES_DIR, "integration_summary.png")
     if os.path.exists(img_path):
         # The slide already has a large figure at the top, add ours below it
         # or replace one of the text elements
@@ -402,7 +401,7 @@ def add_slide_my_work1(prs):
                           font_size=Pt(10))
 
     # Single scatterer figure
-    img1 = os.path.join(ASSETS_DIR, "p21_single_scatterer_sinusoidal.png")
+    img1 = os.path.join(FIGURES_DIR, "micro_doppler_single_scatterer.png")
     if os.path.exists(img1):
         add_image(slide, img1, Inches(0.2), Inches(4.1),
                   width=Inches(6.2))
@@ -464,7 +463,7 @@ def add_slide_my_work2(prs):
                           font_size=Pt(10))
 
     # Integration summary figure
-    img2 = os.path.join(ASSETS_DIR, "p20_integration_pipeline_summary.png")
+    img2 = os.path.join(FIGURES_DIR, "integration_summary.png")
     if os.path.exists(img2):
         add_image(slide, img2, Inches(0.2), Inches(4.8),
                   width=Inches(6.5))
@@ -492,7 +491,7 @@ def add_slide_my_work2(prs):
                           font_size=Pt(10))
 
     # Standard vs Micro-Doppler comparison figure
-    img3 = os.path.join(ASSETS_DIR, "p22_standard_vs_microdoppler_comparison.png")
+    img3 = os.path.join(FIGURES_DIR, "micro_doppler_vs_standard_doppler.png")
     if os.path.exists(img3):
         add_image(slide, img3, Inches(6.5), Inches(4.9),
                   width=Inches(6.3))

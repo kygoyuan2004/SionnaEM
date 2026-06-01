@@ -48,7 +48,7 @@ from step8_blender_scene_interface import (
 # ── 默认配置 ──────────────────────────────────────────────────────────
 FREQ_35G = 3.5e9
 FREQ_28G = 28e9
-OUTPUT_DIR = Path(__file__).resolve().parent
+OUTPUT_DIR = Path(__file__).resolve().parent.parent / "pipeline"
 FIG_DIR = OUTPUT_DIR / "figures"
 DATA_DIR = OUTPUT_DIR / "data"
 

@@ -21,7 +21,7 @@ Micro-Doppler： a_i(t) = a_i * e^{-j2πfτ_i} * e^{jβ sin(2πf_rot t + φ₀)}
 
 **具体步骤**：
 
-1. 使用 `sence_dataset_create_paris.py` 的 Paris/Etoile 场景框架
+1. 使用 `scene_dataset_create_paris.py` 的 Paris/Etoile 场景框架
 2. 让 UE 沿固定方向匀速移动（如沿 x 轴 v = 10 m/s），BS 静止
 3. 以固定时间间隔 Δt = 0.5 ms 多次调用 `path_solver()`，采集 CIR 序列（共 100 个时刻）
 4. 对每条路径，从相邻时刻 CIR 的相位差提取 Doppler 频移：f̂_Δ = Δφ / (2π * Δt)
@@ -196,7 +196,7 @@ source /home/zfh/miniconda3/etc/profile.d/conda.sh && conda activate sionna_rt
 
 | 文件 | 可复用部分 |
 |------|-----------|
-| `scene_create/sence_dataset_create_paris.py` | 场景构建、循环采样 CIR 的框架 |
-| `CIR_to_CFR/dataset_CIR_to_CFR.py` | CIR 加载和 CFR 重建 |
-| `CIR_to_CFR/Hgt_transform_to_HLS.py` | 准静态假设下的信道估计流程（可对比动态场景） |
+| `scene_dataset/scene_dataset_create_paris.py` | 场景构建、循环采样 CIR 的框架 |
+| `tools/cir_to_cfr/dataset_CIR_to_CFR.py` | CIR 加载和 CFR 重建 |
+| `tools/cir_to_cfr/Hgt_transform_to_HLS.py` | 准静态假设下的信道估计流程（可对比动态场景） |
 | `RT_tutorial/sionna-rt/tutorials/Mobility.ipynb` | Sionna RT 移动性仿真示例 |

@@ -8,7 +8,7 @@
 
 ## 1. 场景参数 (BlenderSceneSpec)
 
-> 定义于 `pipeline/step8_blender_scene_interface.py`
+> 定义于 `src/step8_blender_scene_interface.py`
 
 | 字段 | 类型 | 默认值 | 物理含义 | 单位 |
 |------|------|--------|---------|------|

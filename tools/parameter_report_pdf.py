@@ -349,17 +349,17 @@ def main() -> None:
     parser.add_argument(
         "input",
         nargs="?",
-        default="SionnaEM/pipeline/parameter_report.md",
+        default="docs/parameter_report.md",
         help="Source Markdown file.",
     )
     parser.add_argument(
         "--clean-md",
-        default="SionnaEM/pipeline/parameter_report_pdf_tables.md",
+        default="docs/parameter_report_tables.md",
         help="Filtered Markdown output path.",
     )
     parser.add_argument(
         "--pdf",
-        default="SionnaEM/pipeline/parameter_report_pdf_tables.pdf",
+        default="docs/parameter_report_tables.pdf",
         help="PDF output path.",
     )
     args = parser.parse_args()

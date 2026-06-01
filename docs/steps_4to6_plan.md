@@ -356,6 +356,6 @@ class MicroDopplerModulator:
 - [ ] `micro_doppler_modulator.py` — 可复用的调制器模块（含 docstring + 类型注解）
 - [ ] `micro_doppler_integration_demo.py` — 接入 Sionna CIR 的集成演示
 - [ ] `method_comparison.md` — 与两篇论文的定量对标分析
-- [ ] 更新 `Micro_Doppler_Sionna_RT_三步验证报告.md` 为六步完整报告
+- [ ] 更新 `three_step_validation_report.md` 为六步完整报告
 - [ ] 所有测试通过，性能满足基准
 - [ ] 汇报材料就绪，可向何老师展示

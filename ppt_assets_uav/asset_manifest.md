@@ -151,8 +151,8 @@
 | `figures/integration_floor_wall.png` | floor_wall 单场景 2×3 详细对比 | 备份页 |
 | `figures/modulator_verification.png` | Modulator 三面板验证（谱图+谐波+β∝R） | 备份页，展示模块验证 |
 | `docs/group_meeting_report.pdf` | 组会报告 PDF | 参考整体汇报逻辑 |
-| `docs/SionnaEM_项目成果汇报.pdf` | 项目成果汇报（含嵌入图示） | 参考既有汇报材料 |
-| `docs/Micro_Doppler_Sionna_RT_三步验证报告.pdf` | 三步验证完整报告 | 提取验证结果表格 |
+| `docs/project_achievement_report.pdf` | 项目成果汇报（含嵌入图示） | 参考既有汇报材料 |
+| `docs/three_step_validation_report.pdf` | 三步验证完整报告 | 提取验证结果表格 |
 
 ---
 

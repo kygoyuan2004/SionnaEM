@@ -161,7 +161,7 @@ path_gain: [num_tx, cells_y, cells_x]
 
 ### 项目现有能力：CIR → CFR + 导频叠加
 
-项目 `tools/CIR_to_CFR/` 目录已实现完整的 OFDM 导频处理链路：
+项目 `tools/cir_to_cfr/` 目录已实现完整的 OFDM 导频处理链路：
 
 1. **CIR → CFR 转换**：
    - 将时域 CIR 通过 FFT 转换到频域 CFR
