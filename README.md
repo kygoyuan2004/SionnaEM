@@ -192,10 +192,6 @@ SionnaEM/
 │   ├── UAV_MicroDoppler_图片图解说明.pdf          #   图片图解说明（PDF）
 │   └── p16_*.png / p20_*.png / p21_*.png / p22_*.png  # 按 PPT 页码组织的图表导出
 │
-├── group_pre/                                   # 组会汇报材料
-│   ├── 0521组会汇报.pptx                        #   原始 PPT
-│   ├── 0521组会汇报_improved.pptx                #   改进版 PPT（含自生成图）
-│   └── 0521组会汇报.pdf                         #   PDF 导出
 │
 ├── 0601/                                        # 6月1日汇报材料
 │   ├── 参数.pdf                                  #   参数说明文档
