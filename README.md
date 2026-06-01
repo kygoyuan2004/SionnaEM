@@ -384,34 +384,7 @@ a_dyn, tau_dyn = mod.modulate_cir(a_static, tau_static, t)
 5. **双频段可扩展性** — 管线支持 3.5 GHz（Sub-6）和 28 GHz（mmWave）两个频段，可复用同一场景只需修改 `scene.frequency`
 6. **Blender → Sionna 场景管线** — 支持从 Blender 3D 模型直接导出 PLY → 生成 Mitsuba XML → Sionna RT 加载的完整工作流，使仿真可脱离 Sionna 内置场景限制
 
----
-
-## 局限性与改进方向
-
-### 物理模型局限
-- **近场近似误差**（< 50 m 时明显）— 当前模型假设所有散射点共享同一组路径时延，在近场条件下该假设引入相位误差
-- **RCS 方向图缺失** — 当前使用恒定幅度权重，未考虑叶片散射截面随入射角的变化
-- **无动态遮挡效应** — 叶片旋转过程中可能被机身或其他叶片遮挡，当前模型未建模
-- **点散射体近似** — 将整个叶片近似为尖端单点散射，忽略了分布式散射贡献
-- **无叶片弹性变形** — 高速旋转时叶片的弹性形变未被建模
-
-### 多径模型局限
-- **静态多径结构** — 时延不随时间变化，但实际中 UAV 的移动会导致路径时延的缓变
-- **无环境动态交互** — 未考虑 UAV 旋转叶片对周围环境反射模式的改变
-
-详见 `docs/SionnaEM_项目问答汇总.pdf` 第三章和 `docs/Technical_QA.md`。
-
----
-
 ## 论文参考
 
 - Sun et al., "Micro-Doppler Signature-Based Detection, Classification, and Localization of Small UAV With Long Short-Term Memory Neural Network," *IEEE TGRS*, 2021.
 - 相关 Micro-Doppler / 射线追踪仿真论文（见 `docs/` 中引用）
-
----
-
-## 项目贡献者
-
-- 主要开发者：kygoyuan2004
-- 工作单位：SionnaEM 课题组
-- 项目周期：2026 年 4 月 — 至今
