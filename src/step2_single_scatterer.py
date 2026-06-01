@@ -1,13 +1,5 @@
 #!/usr/bin/env python3
-"""Micro-Doppler: Single Rotating Scatterer — Sionna RT Validation (Step 2).
 
-Models a single scatter point rotating on a blade (R=0.15 m, f_rot=100 Hz).
-TX position is updated each snapshot to the instantaneous scatterer position.
-Phase modulation is extracted and compared against micro-Doppler theory.
-
-Expected: sinusoidal phase modulation φ(t) = 2πf_Δ·t + β·sin(2πf_rot·t + φ₀)
-with modulation index β ≈ 175.9 rad at 28 GHz.
-"""
 
 from __future__ import annotations
 

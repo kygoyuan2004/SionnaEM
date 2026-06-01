@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<style>
+  @page {
+    size: A4;
+    margin: 2cm 2.2cm;
+    @top-center {
+      content: "UAV 微多普勒感知 — PPT 素材图解说明";
+      font-size: 9pt;
+      color: #888;
+      font-family: "Noto Sans SC", "WenQuanYi Micro Hei", "SimHei", sans-serif;
+    }
+    @bottom-center {
+      content: "第 " counter(page) " 页";
+      font-size: 9pt;
+      color: #888;
+      font-family: "Noto Sans SC", "WenQuanYi Micro Hei", "SimHei", sans-serif;
+    }
+  }
+  body {
+    font-family: "Noto Sans SC", "WenQuanYi Micro Hei", "SimHei", "Source Han Sans", sans-serif;
+    font-size: 11pt;
+    line-height: 1.8;
+    color: #333;
+  }
+  h1 {
+    text-align: center;
+    font-size: 18pt;
+    color: #1a3a5c;
+    border-bottom: 2px solid #1a3a5c;
+    padding-bottom: 12px;
+    margin-bottom: 30px;
+  }
+  h2 {
+    font-size: 14pt;
+    color: #1a3a5c;
+    margin-top: 36px;
+    margin-bottom: 10px;
+    padding: 6px 10px;
+    background: linear-gradient(90deg, #e8f0f8, #fff);
+    border-left: 4px solid #1a3a5c;
+  }
+  .image-container {
+    text-align: center;
+    margin: 18px 0;
+  }
+  .image-container img {
+    max-width: 100%;
+    max-height: 380px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+  .explanation {
+    text-align: justify;
+    text-indent: 2em;
+    margin: 12px 0 20px 0;
+    padding: 0 4px;
+  }
+  .meta {
+    font-size: 9pt;
+    color: #999;
+    margin-top: 4px;
+  }
+  .meta span {
+    margin-right: 16px;
+  }
+  .page-break {
+    page-break-before: always;
+  }
+  .toc {
+    background: #f8f9fa;
+    padding: 16px 24px;
+    border-radius: 6px;
+    margin: 20px 0;
+    line-height: 2.2;
+  }
+  .toc a {
+    color: #1a3a5c;
+    text-decoration: none;
+  }
+</style>
+</head>
+<body>
+
+<h1>UAV 微多普勒感知 — PPT 素材图解说明</h1>
+
+<p style="text-align:center;color:#666;">本文件对 ppt_assets_uav/ 目录下的 11 张图片逐张进行详细解释，每张图约 400 字说明。<br>
+生成日期：2026-05-20</p>
+
+<div class="toc">
+<strong>目录</strong><br>
+1. p16_quadrotor_microdoppler_spectrogram — 四旋翼 UAV 完整 Micro-Doppler 时频谱图<br>
+2. p16_uav_detection_contrast — UAV 信号与纯噪声可检测性对比<br>
+3. p20_baseline_doppler_validation — 标准 Doppler 基线验证<br>
+4. p20_integration_pipeline_summary — 三场景集成验证管线汇总<br>
+5. p20_modulator_cross_validation — Micro-Doppler 调制器交叉验证<br>
+6. p21_single_scatterer_sinusoidal — 单旋转散射点正弦调制物理验证<br>
+7. p21_quadrotor_spectrogram_full — 四旋翼 UAV 完整谱图（物理可解释性视角）<br>
+8. p21_modulation_frequency_harmonics — 包络调制频谱谐波分析<br>
+9. p21_stationary_vs_moving_uav — 静止 vs 移动 UAV 谱图对比<br>
+10. p22_standard_vs_microdoppler_comparison — 标准 Doppler vs Micro-Doppler 机制对比<br>
+11. p22_project_integration_summary — 项目集成总结：论文一+论文二互补链路<br>
+</div>
+
+<!-- ============================================ -->
+<!-- Image 1 -->
+<!-- ============================================ -->
+<h2>1. p16_quadrotor_microdoppler_spectrogram<br>
+<span style="font-size:10pt;font-weight:normal;color:#888;">四旋翼 UAV 完整 Micro-Doppler 时频谱图</span></h2>
+
+<div class="meta">
+  <span>文件: p16_quadrotor_microdoppler_spectrogram.png</span>
+  <span>分辨率: 2502×1680</span>
+  <span>DPI: 200</span>
+  <span>PPT页码: 第16页</span>
+</div>
+
+<div class="image-container">
+  <img src="p16_quadrotor_microdoppler_spectrogram.png" alt="四旋翼UAV Micro-Doppler谱图">
+</div>
+
+<div class="explanation">
+这是一张四面板组合图，展示了在 Sionna RT 框架下生成的首个四旋翼 UAV 完整 Micro-Doppler 时频谱图，是本次组会汇报中最具视觉冲击力的核心素材。子图 (a) 为 UAV 几何俯视图，以雷达视线方向为参考，标注了四旋翼的叶片旋转平面与机身空间关系：旋翼半径 R=0.15 m，叶片尖端线速度 v_tip = 2πR × f_rot ≈ 94.2 m/s，八个叶片尖端加上一个机身散射点共九个散射体构成了仿真中的目标模型。子图 (b) 是全带宽 Micro-Doppler 时频谱图，采用 inferno 色图渲染，频率范围覆盖 ±20 kHz。谱图中最为醒目的是 ±17.6 kHz 处的宽带频率扩展，这对应叶片尖端在雷达视线方向上的最大径向速度产生的极限 Doppler 频移——当叶片运动方向与雷达视线平行时，相对速度达到峰值，引起的频偏也达到最大值。中心频率处可见一条明亮且稳定的 467 Hz 机身 Doppler 线，代表 UAV 机身整体平移运动引入的恒定频移分量。子图 (c) 将 ±300 Hz 低频区域放大，清晰展现出以 100 Hz 为间距的边带谐波结构，这一间距精确等于旋翼转速 f_rot = 100 Hz（即 6000 RPM）。子图 (d) 为 Doppler 频率剖面的谐波标注图，以频率为横轴、归一化功率为纵轴，标注了各次谐波的位置。整张图的核心信息是：在 fc=28 GHz 载波频率下，四旋翼 UAV 的 Micro-Doppler 特征呈现出文献中经典的"helicopter signature"——宽带频率扩展、机身 Doppler 线、以及等间距边带谐波三者同时存在，且每一项结构参数都可从物理参数（旋翼半径、转速、叶片数、载波频率）直接推导。
+</div>
+
+<!-- ============================================ -->
+<!-- Image 2 -->
+<!-- ============================================ -->
+<div class="page-break"></div>
+<h2>2. p16_uav_detection_contrast<br>
+<span style="font-size:10pt;font-weight:normal;color:#888;">UAV 信号与纯噪声可检测性对比</span></h2>
+
+<div class="meta">
+  <span>文件: p16_uav_detection_contrast.png</span>
+  <span>分辨率: 2545×987</span>
+  <span>DPI: 200</span>
+  <span>PPT页码: 第16/19页（备选）</span>
+</div>
+
+<div class="image-container">
+  <img src="p16_uav_detection_contrast.png" alt="UAV信号vs纯噪声对比">
+</div>
+
+<div class="explanation">
+这是一张并排对比图，直观展示了"有 UAV 微多普勒信号"与"仅有纯噪声"两种场景下的时频谱图差异，用于论证 UAV 微多普勒特征的可检测性。左侧子图呈现的是含 UAV 目标的接收信号时频谱图：在频域上可见清晰的宽带 Micro-Doppler 调制结构——±17.6 kHz 的频率扩展范围、中心 467 Hz 的机身 Doppler 线、以及以 100 Hz 为间隔的谐波边带。这些特征在时频谱图上形成了高度结构化的图案，并非随机分布，而是严格遵循旋翼旋转的周期性规律。频谱能量高度集中且具有明确的物理对应关系，使得 UAV 信号在时频域中呈现出一种"有序的复杂"。右侧子图展示的是同等信噪比条件下纯噪声背景的时频谱图：能量在频率轴上呈随机分布，没有明显的结构化特征，没有谐波间距，也没有宽带扩展的包络形状。噪声的频谱能量虽然可能在某些时刻偶然出现局部峰值，但这些峰值不具备时间上的持续性和频率上的规律间距。两张图并排放置，即使不经过任何定量指标计算，人眼也能立即区分出哪一侧存在 UAV 目标。这张对比图的核心论证价值在于：它从定性角度证明了 Micro-Doppler 特征作为一种"信号指纹"的判别力——UAV 旋翼产生的微多普勒调制在时频域中引入了一种物理上必然存在的结构化模式，而这种模式在纯噪声中是不可能自然出现的。这为论文一中基于 STFT 时频谱图和 LSTM 网络进行 UAV 检测的方法提供了直观的物理依据：深度学习网络本质上是在学习这种"有序结构 vs 随机噪声"的判别边界。在组会汇报中，这张图适合作为第 16 页的辅助论据或第 19 页的补充证据。
+</div>
+
+<!-- ============================================ -->
+<!-- Image 3 -->
+<!-- ============================================ -->
+<div class="page-break"></div>
+<h2>3. p20_baseline_doppler_validation<br>
+<span style="font-size:10pt;font-weight:normal;color:#888;">标准 Doppler 基线验证</span></h2>
+
+<div class="meta">
+  <span>文件: p20_baseline_doppler_validation.png</span>
+  <span>分辨率: 2385×1575</span>
+  <span>DPI: 200</span>
+  <span>PPT页码: 第20页（备选）</span>
+</div>
+
+<div class="image-container">
+  <img src="p20_baseline_doppler_validation.png" alt="标准Doppler基线验证">
+</div>
+
+<div class="explanation">
+这张图展示了 Sionna RT Micro-Doppler 仿真管线的第一步验证——标准 Doppler 基线验证，是整个三步验证体系的起点和基础。图中使用了经典的 Etoile（星形）移动散射体场景：一个或多个散射点以恒定速度沿直线轨迹运动，穿过雷达波束覆盖区域。因为散射体做匀速直线运动，其径向速度随时间缓慢变化，产生的 Doppler 频移也是缓慢、连续变化的——这与旋翼产生的快速振荡式 Micro-Doppler 形成鲜明对比。图的上半部分展示了 Sionna RT 射线追踪生成的时变信道冲击响应（CIR）经 STFT 变换后的时频谱图：横轴为时间，纵轴为 Doppler 频率，颜色深浅代表该频率处的信号能量强度。图中可见一条平滑弯曲的 Doppler 轨迹，其形状与散射体通过雷达波束时的径向速度变化曲线完全吻合。图的下半部分将 Sionna RT 仿真得到的 Doppler 频率轨迹与解析计算的理论 Doppler 曲线进行叠加对比：解析解基于简单的几何关系——散射体位置随时间变化，投影到雷达视线方向得到径向速度，再乘以 2f_c/c 得到瞬时 Doppler 频移。两条曲线的重合度极高（相关系数接近 1.0），验证了 Sionna RT 在基础 Doppler 仿真层面的正确性。这一步验证的意义在于：在引入复杂的 Micro-Doppler 调制（正弦相位调制、多散射点叠加、多径效应）之前，首先确认射线追踪引擎输出的基本 Doppler 信息是准确的。如果这一步不通过，后续所有 Micro-Doppler 结果都将失去可信基础。该图适合放在第 20 页的"Step 1: 标准 Doppler 验证"部分，作为管线从基础验证起步的证据。
+</div>
+
+<!-- ============================================ -->
+<!-- Image 4 -->
+<!-- ============================================ -->
+<div class="page-break"></div>
+<h2>4. p20_integration_pipeline_summary<br>
+<span style="font-size:10pt;font-weight:normal;color:#888;">三场景集成验证管线汇总</span></h2>
+
+<div class="meta">
+  <span>文件: p20_integration_pipeline_summary.png</span>
+  <span>分辨率: 2704×2214</span>
+  <span>DPI: 200</span>
+  <span>PPT页码: 第20页（主图）/ 第22页</span>
+</div>
+
+<div class="image-container">
+  <img src="p20_integration_pipeline_summary.png" alt="三场景集成验证管线汇总">
+</div>
+
+<div class="explanation">
+这是整个 Micro-Doppler 仿真管线中信息量最丰富的一张汇总图，将 Step 5 三场景集成验证的全部关键结果整合在一个视图内。整张图由六个子图构成，分别对应仿真流程的不同验证维度。子图 (a)-(c) 为三个不同电磁传播场景下的 Micro-Doppler 时频谱图：Paris LOS（巴黎街道视距场景）展示了在强直射路径主导下的清晰 Micro-Doppler 特征——±17.6 kHz 宽带扩展和 100 Hz 谐波边带完整保留，信号能量集中于直射路径；Paris 多径场景在相同 UAV 运动参数下，由于建筑物墙面和地面的反射引入了额外的多径分量，谱图中可见主 Doppler 轨迹之外出现了能量较弱但结构相似的"鬼影"轨迹，这是多径传播产生的延迟副本在时频域中的表现；floor_wall 场景（地板+墙面简化室内场景）则展示了在强反射环境下的极端多径情况，多条反射路径叠加导致谱图能量分布更为弥散，但 100 Hz 的调制基频结构仍然可辨。子图 (d) 将三个场景的 Doppler 频率剖面与解析参考曲线进行叠加对比，Sionna RT 仿真结果与理论值在频率偏移量、谐波位置和频谱扩展范围三个维度上均高度一致，验证了管线在不同传播环境下的鲁棒性。子图 (e) 为验证指标柱状图，以相关系数和频谱扩展误差作为定量评价指标，三个场景的相关系数均超过 0.95，频谱扩展误差在 5% 以内。子图 (f) 为性能基准表格，记录了管线各阶段的耗时：Sionna RT 射线追踪约 15 ms，CIR 后处理 Micro-Doppler 调制约 5.5 ms，总耗时不到 70 ms。这张图的核心叙事是：基于 Sionna RT 的 Micro-Doppler 仿真管线可实现"一次 RT 求解 + CIR 后处理调制 = 多场景可泛化的 UAV 微多普勒数据生成"，且对 Sionna RT 引擎的修改量为零——这是方案最大的工程优势。
+</div>
+
+<!-- ============================================ -->
+<!-- Image 5 -->
+<!-- ============================================ -->
+<div class="page-break"></div>
+<h2>5. p20_modulator_cross_validation<br>
+<span style="font-size:10pt;font-weight:normal;color:#888;">Micro-Doppler 调制器交叉验证</span></h2>
+
+<div class="meta">
+  <span>文件: p20_modulator_cross_validation.png</span>
+  <span>分辨率: 2390×892</span>
+  <span>DPI: 200</span>
+  <span>PPT页码: 第20页（备选）</span>
+</div>
+
+<div class="image-container">
+  <img src="p20_modulator_cross_validation.png" alt="调制器交叉验证">
+</div>
+
+<div class="explanation">
+这张图展示了 Micro-Doppler 调制器（MicroDopplerModulator）模块的交叉验证结果，验证目标是确认 CIR 后处理阶段施加的正弦相位调制能够在时频域中正确产生预期的 Micro-Doppler 特征。调制器的工作原理是：在 Sionna RT 输出的静态 CIR 基础上，对每个旋转散射点路径的复信道系数乘以 exp(j·β·sin(2π·f_rot·t)) 的时变相位因子，其中调制指数 β = 4πR/λ 由旋翼半径 R 和载波波长 λ 决定，f_rot 为旋翼转速。这张图包含多个子面板，分别从不同角度验证调制器的输出正确性。左侧或上方子图展示了单个旋转散射点经调制器处理后的时频谱图：可见清晰的瞬时频率正弦振荡轨迹，振荡幅度精确等于 β×f_rot，振荡频率等于 f_rot，这与理论公式 f_inst(t) = β×f_rot×cos(2π·f_rot·t) 完全一致。中间子图展示了调制后信号的包络频谱分析：在频域中可见以 f_rot 为基频的多次谐波分量，谐波幅度的分布规律可以通过 Bessel 函数展开进行理论预测——第 k 次谐波的幅度正比于 J_k(β)，其中 J_k 为第一类 k 阶 Bessel 函数。右侧子图对调制指数 β 的拟合值进行了验证：从仿真谱图中提取的 β 实测值与理论公式 β = 4πR/λ 计算值之间的误差小于 0.01%，这一精度验证了相位调制实现的数值正确性。此外，图中还包含了不同旋翼半径 R 值下的 β 线性关系验证，数据点完美落在 β ∝ R 的理论直线上。这些验证结果确认了调制器模块的两项核心能力：一是在单散射点层面精确复现正弦相位调制的物理规律，二是在多散射点（如四旋翼的 8 个叶片尖端）层面通过叠加各自的正弦调制来合成完整的 UAV Micro-Doppler 信号。该图适合放在第 20 页的备份位置，用于支撑调制器模块可靠性的技术论证。
+</div>
+
+<!-- ============================================ -->
+<!-- Image 6 -->
+<!-- ============================================ -->
+<div class="page-break"></div>
+<h2>6. p21_single_scatterer_sinusoidal<br>
+<span style="font-size:10pt;font-weight:normal;color:#888;">单旋转散射点正弦调制物理验证</span></h2>
+
+<div class="meta">
+  <span>文件: p21_single_scatterer_sinusoidal.png</span>
+  <span>分辨率: 2156×1680</span>
+  <span>DPI: 200</span>
+  <span>PPT页码: 第21页（主图2）</span>
+</div>
+
+<div class="image-container">
+  <img src="p21_single_scatterer_sinusoidal.png" alt="单散射点正弦调制验证">
+</div>
+
+<div class="explanation">
+这是整个 Micro-Doppler 仿真工作中最具物理可解释性的一张图，也是三步验证体系中最基础、最核心的一步——从单旋转散射点出发验证最基本的物理规律。整张图为四面板布局。子图 (a) 展示了单散射点的三维旋转轨迹：散射点位于半径 R=0.15 m 的圆周上，以 f_rot=100 Hz 的转速绕中心轴匀速旋转，旋转平面与雷达视线方向呈一定夹角，轨迹在三维空间中呈现为标准的圆形。这一几何模型是整个 Micro-Doppler 信号产生的物理根源——旋转运动导致散射点到雷达的径向距离随时间周期性变化，从而在接收信号的相位中引入周期性调制。子图 (b) 展示的是从 Sionna RT 仿真 CIR 中提取的相位调制函数 φ_mod(t)：横轴为时间，纵轴为相位调制量（弧度），曲线呈完美的正弦波形，振荡频率精确等于 100 Hz，振荡幅度 β ≈ 176.05 rad，与理论值 β = 4πR/λ = 4π×0.15/(0.0107) ≈ 176.05 rad 的误差为 0.00%。这一验证是整个管线中最底层的"物理真值检验"——如果相位调制不是正弦的，或者调制指数对不上，那么后续所有频谱分析都将是错误的。子图 (c) 展示了从相位调制求导得到的瞬时频率曲线：f_inst(t) = (1/2π)×dφ_mod/dt = β×f_rot×cos(2π·f_rot·t)，峰值频偏 ±β×f_rot ≈ ±17.6 kHz，这正是四旋翼谱图中宽带扩展的来源。频率曲线也是完美的余弦振荡，与正弦相位的导数关系严格成立。子图 (d) 将 Sionna RT 仿真的 CIR 相位与基于几何关系独立计算的理论相位进行对比，两者的相关系数精确等于 1.000000，验证了射线追踪在相位层面的绝对精度。这张图的核心教学意义在于：它将 Micro-Doppler 从"谱图中的花纹"还原为最基本的物理过程——旋转运动产生正弦距离变化，距离变化产生正弦相位调制，相位调制产生余弦频率振荡——每一步都有解析公式对应，每一步都被仿真精确复现。在组会汇报中，这张图适合用于向听众解释"为什么 Micro-Doppler 特征长这个样子"的根本原因。
+</div>
+
+<!-- ============================================ -->
+<!-- Image 7 -->
+<!-- ============================================ -->
+<div class="page-break"></div>
+<h2>7. p21_quadrotor_spectrogram_full<br>
+<span style="font-size:10pt;font-weight:normal;color:#888;">四旋翼 UAV 完整谱图（物理可解释性视角）</span></h2>
+
+<div class="meta">
+  <span>文件: p21_quadrotor_spectrogram_full.png</span>
+  <span>分辨率: 2502×1680</span>
+  <span>DPI: 200</span>
+  <span>PPT页码: 第21页（主图1）</span>
+  <span>备注: 与图1为同一源文件，第21页侧重物理可解释性解读</span>
+</div>
+
+<div class="image-container">
+  <img src="p21_quadrotor_spectrogram_full.png" alt="四旋翼UAV谱图-物理可解释性">
+</div>
+
+<div class="explanation">
+本图与第 16 页使用的四旋翼 Micro-Doppler 谱图为同一张源图，但在第 21 页的语境下，解读重点从"展示仿真成果"转向"阐释物理可解释性"——即谱图中观察到的每一个结构特征都有明确的物理参数与之对应。对于这张四面板图，第 21 页建议聚焦于子图 (c) 低频放大区域和子图 (d) Doppler 频率剖面，引导听众建立从"看图"到"读参数"的认知跃迁。具体而言，谱图中可识别的三大特征及其物理对应关系如下：第一，100 Hz 边带间距——在子图 (c) 的 ±300 Hz 低频放大图中，可以清楚地数出以 100 Hz 为等间距排列的谐波谱线，这一间距直接等于旋翼的机械旋转频率 f_rot = 100 Hz（折算为 6000 RPM）。物理原因在于：旋翼每旋转一周，每个叶片尖端完成一次完整的接近-远离雷达的径向运动周期，因此在频域中以 f_rot 为基频产生调制边带。第二，800 Hz 叶片闪烁频率——在子图 (d) 的 Doppler 剖面中，可以观察到在 800 Hz（即 8×f_rot）处存在一个显著的频谱峰值，这对应八个叶片以相同角速度旋转时产生的"叶片闪烁"效应：每个叶片每次通过雷达视线方向的正前方位置时产生一个短暂的强反射脉冲，八个叶片在每圈旋转中依次通过该位置，因此闪烁的重复频率等于叶片数乘以转速。第三，±17.6 kHz 极限频偏——子图 (b) 全带谱图中左右两端的最远扩展边界对应 ±17.6 kHz，这是叶片尖端在雷达视线方向最大径向速度产生的 Doppler 频移极限。最大径向速度 v_max = 2πR × f_rot = 94.2 m/s，对应的 Doppler 频移 f_d_max = 2×v_max×f_c/c = 2×94.2×28e9/3e8 ≈ 17.6 kHz。该值也等于调制指数 β 乘以转速 f_rot（176×100 = 17.6 kHz），因为 β = 4πR/λ 本身就编码了最大相位偏移量。通过这组物理对应的解读，听众可以理解：Micro-Doppler 谱图不是需要"黑盒学习"的抽象模式，而是 UAV 几何与运动参数的确定性函数——给定 R、f_rot、N_blades 和 f_c，就可以预先计算出谱图的所有关键结构参数。这正是论文二的核心贡献：用物理仿真替代数据驱动，生成具有物理可解释性的训练数据。
+</div>
+
+<!-- ============================================ -->
+<!-- Image 8 -->
+<!-- ============================================ -->
+<div class="page-break"></div>
+<h2>8. p21_modulation_frequency_harmonics<br>
+<span style="font-size:10pt;font-weight:normal;color:#888;">包络调制频谱谐波分析</span></h2>
+
+<div class="meta">
+  <span>文件: p21_modulation_frequency_harmonics.png</span>
+  <span>分辨率: 2385×1379</span>
+  <span>DPI: 200</span>
+  <span>PPT页码: 第21页（主图3）</span>
+</div>
+
+<div class="image-container">
+  <img src="p21_modulation_frequency_harmonics.png" alt="调制频率谐波分析">
+</div>
+
+<div class="explanation">
+这张图从"包络调制频谱"这一独特视角分析四旋翼 UAV 的 Micro-Doppler 信号，揭示叶片闪烁效应在信号包络中留下的周期性特征，是论文二中分类任务物理依据的核心证据。图由上下两个子面板构成。子图 (a) 展示了接收信号的幅度包络 |s(t)| 随时间的变化曲线，横轴为时间（覆盖约 25 ms），纵轴为归一化信号幅度。在这条约 25 ms 的时间窗口内，可以清晰地观察到以约 12.5 ms 为周期的幅度起伏——这正是八个叶片轮流扫过雷达视线方向时产生的"叶片闪烁"现象。每个叶片的雷达散射截面（RCS）具有一定的方向性，当叶片的前缘正对雷达时反射最强，而当叶片侧对或背离雷达时反射最弱。八个叶片均匀分布在两个旋翼平面上，因此在一个完整的旋转周期（1/f_rot = 10 ms）内，每个旋翼的四个叶片各产生一次强反射，两个旋翼的叶片交错排列，使得闪烁周期缩短为旋转周期的一半（5 ms）或出现更复杂的调制模式。子图 (b) 是对包络信号 |s(t)| 进行傅里叶变换得到的包络调制频谱，横轴为调制频率（Hz），纵轴为归一化频谱幅度。频谱中呈现出一系列等间距的谐波峰，基频为 f_rot = 100 Hz，各次谐波位于 100 Hz、200 Hz、300 Hz……直至 800 Hz 及以上。其中最显著的特征是位于 800 Hz 处的主峰——800 Hz = 8 × 100 Hz = N_blades × f_rot，即八个叶片共同产生的闪烁基频。此外，偶数次谐波（200 Hz、400 Hz、600 Hz、800 Hz）的幅度普遍高于奇数谐波（100 Hz、300 Hz、500 Hz），这一"偶数谐波占优"的规律源于四旋翼的对称几何结构：两个相对的叶片在旋转中始终处于对称位置，它们对包络的贡献在相位上存在特定的叠加/抵消关系，导致奇数谐波被部分抑制。这张图的应用价值在于：包络调制频谱的谐波结构（尤其是基频 f_rot 和主峰位置 N_blades×f_rot）可以作为 UAV 分类的特征向量——不同的 UAV 型号具有不同的叶片数和典型转速，其包络调制频谱的谐波模式也因此不同。在论文一中，这类频谱特征被用作 LSTM 分类器的输入；在论文二中，仿真管线可以按需生成不同 UAV 配置下的包络调制频谱，为分类器提供多样化的训练样本。在组会汇报中，这张图适合放在第 21 页，配合主图 1 和主图 2，从"频域谐波分析"角度补充物理可解释性的论证。
+</div>
+
+<!-- ============================================ -->
+<!-- Image 9 -->
+<!-- ============================================ -->
+<div class="page-break"></div>
+<h2>9. p21_stationary_vs_moving_uav<br>
+<span style="font-size:10pt;font-weight:normal;color:#888;">静止 vs 移动 UAV 谱图对比</span></h2>
+
+<div class="meta">
+  <span>文件: p21_stationary_vs_moving_uav.png</span>
+  <span>分辨率: 2545×987</span>
+  <span>DPI: 200</span>
+  <span>PPT页码: 第21页（备选）</span>
+</div>
+
+<div class="image-container">
+  <img src="p21_stationary_vs_moving_uav.png" alt="静止vs移动UAV对比">
+</div>
+
+<div class="explanation">
+这张并排对比图展示了悬停（静止）状态与移动状态下的 UAV Micro-Doppler 时频谱图，核心论证观点是：机身整体平移运动仅引起频谱的整体平移（Doppler 偏移），而不改变由旋翼旋转产生的 Micro-Doppler 调制结构本身。左侧子图为悬停状态 UAV 的时频谱图：机身 Doppler 线位于 0 Hz 附近（理论上严格为 0，实际因仿真中的微小几何偏差可能略有偏移），±17.6 kHz 的 Micro-Doppler 宽带扩展关于零频对称分布，100 Hz 边带谐波结构以零频为中心左右对称排列。这是一个完美的"零平移速度"参考状态，所有频谱特征都仅由旋翼旋转运动产生，没有平动 Doppler 的干扰。右侧子图为移动状态 UAV 的时频谱图：UAV 以一定的径向速度朝雷达方向（或远离雷达方向）飞行，机身 Doppler 线从 0 Hz 平移至约 467 Hz（对应约 2.5 m/s 的径向速度），整个 Micro-Doppler 调制结构——包括 ±17.6 kHz 的宽带扩展范围、100 Hz 的边带间距、800 Hz 的叶片闪烁特征——随之一同整体平移了相同的频率偏移量，但结构本身的形状、间距和相对幅度关系保持不变。这一现象的物理本质是线性的 Doppler 叠加原理：UAV 的总瞬时 Doppler 频率可以分解为 f_d_total(t) = f_d_body + f_d_micro(t)，其中 f_d_body = 2×v_body×f_c/c 是机身平移产生的恒定频移，f_d_micro(t) = β×f_rot×cos(2π·f_rot·t+φ) 是旋翼旋转产生的时变频移。两者在相位层面是加性关系，在频率层面也是加性关系，互不耦合。这一"平移不变性"具有重要的实际意义：在 UAV 检测和分类任务中，无论 UAV 正在朝向还是远离雷达飞行，其 Micro-Doppler 调制模式（边带间距、谐波结构）都是不变的——这意味着一张在悬停 UAV 数据上训练的分类网络，在原理上也应当能够泛化到移动 UAV 的目标。当然，实际中还需要考虑由平移引起的杂波环境变化和多径模式变化，但至少目标本身的微动特征具有平移不变性这一物理保证，为算法的跨速度泛化提供了理论基础。该图适合放在第 21 页的备份位置。
+</div>
+
+<!-- ============================================ -->
+<!-- Image 10 -->
+<!-- ============================================ -->
+<div class="page-break"></div>
+<h2>10. p22_standard_vs_microdoppler_comparison<br>
+<span style="font-size:10pt;font-weight:normal;color:#888;">标准 Doppler vs Micro-Doppler 机制对比</span></h2>
+
+<div class="meta">
+  <span>文件: p22_standard_vs_microdoppler_comparison.png</span>
+  <span>分辨率: 2585×1379</span>
+  <span>DPI: 200</span>
+  <span>PPT页码: 第22页（辅图）</span>
+</div>
+
+<div class="image-container">
+  <img src="p22_standard_vs_microdoppler_comparison.png" alt="标准Doppler vs Micro-Doppler">
+</div>
+
+<div class="explanation">
+这是一张教学性极强的四面板并排对比图，将"标准 Doppler 效应"与"Micro-Doppler 效应"的物理机制和信号表现进行了直观的对比，适合在组会汇报的总结部分帮助听众建立清晰的物理概念框架。图的上排两个面板属于标准 Doppler 范畴。左上子图展示了匀速直线运动散射体的径向距离随时间变化关系：散射体以恒定速度 v 运动，其到雷达的径向距离 r(t) 随时间呈线性变化（或近似线性，取决于轨迹与雷达的几何关系），r(t) = r_0 + v_r × t，其中 v_r 为径向速度分量。右上子图展示了对应的接收信号瞬时频率：因为相位 φ(t) = 4π×r(t)/λ = 4π×(r_0+v_r×t)/λ 是时间的线性函数，其导数给出的瞬时频率 f_inst(t) = (1/2π)×dφ/dt = 2v_r/λ = 2v_r×f_c/c 是一个常数。因此在时频谱图中，标准 Doppler 表现为一条水平的（或缓慢弯曲的）频率轨迹，频率值恒定（或缓慢变化），频谱结构简单、没有调制边带。图的左下子图展示了旋转散射体的径向距离随时间变化关系：散射点绕固定轴心旋转，其径向距离 r(t) = r_0 + R×sin(2π·f_rot·t) 是正弦函数。这一正弦变化的物理根源是简单的几何投影——旋转半径 R 在雷达视线方向上的投影长度随旋转角度的变化呈正弦规律。右下子图展示了对应的 Micro-Doppler 瞬时频率：因为相位 φ(t) 包含正弦项 β×sin(2π·f_rot·t)，求导后瞬时频率 f_inst(t) = β×f_rot×cos(2π·f_rot·t) 是余弦振荡，峰值频偏为 ±β×f_rot。在时频谱图中，Micro-Doppler 表现为一条快速振荡的正弦轨迹，具有丰富的谐波边带结构。这张对比图凝练了整项工作的核心物理 insight：标准 Doppler 和 Micro-Doppler 的区别根源于运动形式的不同——平动产生线性相位和常数频率，转动产生正弦调制相位和振荡频率。两者的数学关系是：Micro-Doppler 是标准 Doppler 在"运动本身具有周期性"这一条件下的自然推广。在第 22 页的总结环节，这张图可以帮助听众在离开会议室时带走一个清晰而简洁的认知框架。
+</div>
+
+<!-- ============================================ -->
+<!-- Image 11 -->
+<!-- ============================================ -->
+<div class="page-break"></div>
+<h2>11. p22_project_integration_summary<br>
+<span style="font-size:10pt;font-weight:normal;color:#888;">项目集成总结：论文一+论文二互补链路</span></h2>
+
+<div class="meta">
+  <span>文件: p22_project_integration_summary.png</span>
+  <span>分辨率: 2704×2214</span>
+  <span>DPI: 200</span>
+  <span>PPT页码: 第22页（主图）</span>
+  <span>备注: 与图4为同一源文件，第22页侧重项目集成视角</span>
+</div>
+
+<div class="image-container">
+  <img src="p22_project_integration_summary.png" alt="项目集成总结">
+</div>
+
+<div class="explanation">
+本图与第 20 页的集成管线汇总图为同一张源图（figures/integration_summary.png），但在第 22 页这一项目总结的语境下，解读视角从"管线技术验证"提升为"两篇论文互补关系的整体图景"。这张六面板汇总图在第 22 页扮演着"一图胜千言"的角色——它同时展示了仿真管线的输入（Sionna RT 场景定义）、处理过程（RT 射线追踪 + MicroDopplerModulator 后处理）、输出（多场景 Micro-Doppler 谱图）和验证（与解析解对比），从而将论文一和论文二的关系自然地呈现出来。让我们从两篇论文互补的角度重新审视这六个子图：子图 (a)-(c) 的三场景谱图（Paris LOS、Paris 多径、floor_wall）展示了仿真管线可以按需生成不同电磁环境下 UAV 的 Micro-Doppler 数据——这正是论文一最需要但最缺乏的资源。论文一提出的 MDSUS 方法（spectral subtraction → EMD → STFT → PCA → LSTM）在实测数据上表现优异，但实测数据的采集成本极高（需要真实 UAV、真实雷达、可控飞行环境），且场景多样性有限（通常仅在操场或开阔地采集）。论文二的仿真管线恰好解决了这一痛点：只需修改 Sionna RT 的场景配置文件（.xml 或 .json），就可以生成巴黎街道、室内房间、城市峡谷等任意场景下的 UAV Micro-Doppler 数据，每次仿真耗时不到 70 ms，可以批量生成数万条训练样本。子图 (d) 的三场景 Doppler 剖面对比证明了仿真数据与理论值的高度一致性（相关系数 > 0.95），为仿真数据用作训练集的可靠性提供了定量背书。子图 (e)-(f) 的指标柱状图和性能表格则为工程可行性提供了数据支撑。因此，这张图在第 22 页的核心叙事是：论文一解决了"有了数据之后怎么做"的问题（检测/分类/定位的算法链路），论文二解决了"数据从哪里来"的问题（基于 Sionna RT 的物理仿真生成），两者结合形成了一条完整的 UAV 微多普勒感知研究链路——从场景定义到数据生成，从特征提取到目标分类，每个环节都有明确的技术方案和验证依据。这条链路的"打通"也是本项目在组会上希望传达的最重要的整体信息。
+</div>
+
+<!-- ============================================ -->
+<!-- Footer -->
+<!-- ============================================ -->
+<div class="page-break"></div>
+<div style="text-align:center; padding-top:60px;">
+  <p style="font-size:14pt;color:#1a3a5c;"><strong>— 图解说明完 —</strong></p>
+  <p style="color:#999;margin-top:30px;">本PDF共解释 11 张 PPT 素材图片<br>
+  覆盖第 16 页至第 22 页的 UAV 微多普勒感知内容<br>
+  每张图约 400 字详细中文解释</p>
+  <p style="color:#bbb;margin-top:40px;font-size:9pt;">
+    基于 SionnaEM 项目生成 | 2026-05-20
+  </p>
+</div>
+
+</body>
+</html>

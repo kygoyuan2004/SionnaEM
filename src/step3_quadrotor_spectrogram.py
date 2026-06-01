@@ -70,7 +70,7 @@ WAVELENGTH = SPEED_OF_LIGHT / FC                       # ≈ 10.71 mm
 BETA = 4 * np.pi * R_BLADE / WAVELENGTH                # ≈ 175.9 rad (round-trip)
 V_TIP = OMEGA_ROT * R_BLADE                            # ≈ 94.2 m/s
 F_DEV_PEAK = BETA * F_ROT                              # ≈ 17.6 kHz
-BODY_DOPPLER = FC * V_BODY[0] / SPEED_OF_LIGHT          # ≈ 467 Hz
+BODY_DOPPLER = -2 * FC * V_BODY[0] / SPEED_OF_LIGHT     # ≈ -934 Hz (monostatic)
 
 DELTA_F = FS / N_WIN                                    # ≈ 24.4 Hz
 HOP = N_WIN - N_OVERLAP                                 # 512
@@ -158,7 +158,7 @@ def compute_spectrogram(sig: np.ndarray) -> tuple[np.ndarray, np.ndarray, np.nda
         sig, fs=FS, window=windows.hann(N_WIN),
         nperseg=N_WIN, noverlap=N_OVERLAP, mode="complex",
     )
-    f_centered = np.fft.fftfreq(N_WIN, 1 / FS)
+    f_centered = np.fft.fftshift(np.fft.fftfreq(N_WIN, 1 / FS))
     Z_shifted = np.fft.fftshift(Z, axes=0)
     S = 20 * np.log10(np.abs(Z_shifted) + 1e-12)
     S -= np.max(S)
