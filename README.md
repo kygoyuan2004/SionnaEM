@@ -110,8 +110,11 @@ SionnaEM/
 │   ├── Micro-Doppler_Signature_Simulation_of_Multirotor_UAVs_Using_Ray_Tracing.pdf
 │   └── Micro_Doppler_Sionna_RT_调研报告.pdf
 │
-├── RT_tutorial/                                 # Sionna RT 官方教程（.gitignore 排除）
-└── sionna-large-radio-maps/                     # Sionna 大尺度无线电地图库（.gitignore 排除）
+├── RT_tutorial/                                 # Sionna RT 官方教程与单元测试
+│   └── sionna-rt/                               #   （.gitignore 排除，需自行获取）
+│
+└── sionna-large-radio-maps/                     # Sionna 大尺度无线电地图库
+    └── ...                                      #   （.gitignore 排除，需自行获取）
 ```
 
 ---
@@ -317,16 +320,7 @@ a_dyn, tau_dyn = mod.modulate_cir(a_static, tau_static, t)
 详见 `docs/project_qa_summary.pdf` 第三章和 `docs/Technical_QA.md`。
 
 ---
-
 ## 论文参考
 
 - Sun et al., "Micro-Doppler Signature-Based Detection, Classification, and Localization of Small UAV With Long Short-Term Memory Neural Network," *IEEE TGRS*, 2021.
 - 相关 Micro-Doppler / 射线追踪仿真论文（见 `docs/` 中引用）
-
----
-
-## 项目贡献者
-
-- 主要开发者：kygoyuan2004
-- 工作单位：SionnaEM 课题组
-- 项目周期：2026 年 4 月 — 至今
