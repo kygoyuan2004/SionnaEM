@@ -1,0 +1,8 @@
+Monostatic passive UAV MDS validation
+================================================
+PASS geometry
+PASS stft_output
+PASS default_rt_signal_and_doppler
+PASS phase_continuity
+PASS ablations
+ALL TESTS PASSED

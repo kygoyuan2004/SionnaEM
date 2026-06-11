@@ -1,0 +1,74 @@
+Monostatic passive UAV MDS summary
+================================================
+scene                 : floor_wall
+fc                    : 28.000 GHz
+wavelength            : 10.707 mm
+snapshots/fs          : 1024 @ 2000.0 Hz
+nyquist               : +/-1000.00 Hz
+stft_win/df           : 256 / 7.81 Hz
+body speed            : 1.000 m/s
+rotation freq         : 20.000 Hz
+blade radius          : 0.0200 m
+points per blade      : 3
+scatterers            : 25
+single transmitter    : bs_radar
+body Doppler theory   : -186.796 Hz
+mD peak theory        : 469.468 Hz
+expected support      : [-656.264, 282.672] Hz
+STFT peak             : -187.500 Hz
+STFT support          : [-671.875, 296.875] Hz @ -35.0 dB
+mean path count       : 1.00
+elapsed               : 75.25 s
+noise enabled         : True
+snr_db                : 30.0
+
+Configuration JSON
+{
+  "scene": "floor_wall",
+  "snapshots": 1024,
+  "fs": 2000.0,
+  "fc": 28000000000.0,
+  "max_depth": 0,
+  "cir_sampling_frequency": 122880000.0,
+  "bs_position": [
+    -20.0,
+    0.0,
+    3.0
+  ],
+  "body_position0": [
+    0.0,
+    0.0,
+    3.0
+  ],
+  "body_speed": 1.0,
+  "body_direction": [
+    1.0,
+    0.0,
+    0.0
+  ],
+  "n_rotors": 4,
+  "n_blades_per_rotor": 2,
+  "points_per_blade": 3,
+  "blade_radius": 0.02,
+  "rotor_arm_length": 0.08,
+  "rotation_freq": 20.0,
+  "body_weight": 1.0,
+  "blade_weight": 0.18,
+  "snr_db": 30.0,
+  "add_noise": true,
+  "stft_win": 256,
+  "stft_overlap_ratio": 0.75,
+  "seed": 12345,
+  "output": "/home/zfh/SionnaEM/monostatic_passive_uav_mds/outputs/figures/monostatic_passive_uav_mds.png",
+  "data_output": "/home/zfh/SionnaEM/monostatic_passive_uav_mds/outputs/data/monostatic_passive_uav_mds.npz",
+  "log_output": "/home/zfh/SionnaEM/monostatic_passive_uav_mds/outputs/logs/monostatic_passive_uav_mds_summary.txt",
+  "body_velocity": [
+    1.0,
+    0.0,
+    0.0
+  ],
+  "wavelength": 0.0107068735,
+  "nyquist": 1000.0,
+  "stft_df": 7.8125,
+  "n_scatterers": 25
+}

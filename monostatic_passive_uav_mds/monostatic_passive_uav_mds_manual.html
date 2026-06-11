@@ -1,0 +1,459 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <title>单基地被动 UAV 逐 Snapshot MDS 验证程序说明书</title>
+  <style>
+    @page {
+      size: A4;
+      margin: 18mm 16mm;
+    }
+    body {
+      font-family: "Noto Sans CJK SC", "Source Han Sans SC", "Microsoft YaHei", "DejaVu Sans", sans-serif;
+      color: #172033;
+      background: #ffffff;
+      font-size: 11pt;
+      line-height: 1.62;
+      margin: 0 auto;
+      max-width: 980px;
+    }
+    h1, h2, h3 {
+      color: #0f223d;
+      line-height: 1.28;
+    }
+    h1 {
+      font-size: 24pt;
+      margin: 0 0 8px 0;
+      padding-bottom: 8px;
+      border-bottom: 3px solid #1f5eff;
+    }
+    h2 {
+      font-size: 16pt;
+      margin-top: 28px;
+      padding-bottom: 5px;
+      border-bottom: 1px solid #cfd8e6;
+    }
+    h3 {
+      font-size: 12.5pt;
+      margin-top: 18px;
+    }
+    p {
+      margin: 8px 0;
+    }
+    a {
+      color: #1f5eff;
+      text-decoration: none;
+    }
+    .subtitle {
+      color: #576579;
+      font-size: 12pt;
+      margin-bottom: 18px;
+    }
+    .meta {
+      display: grid;
+      grid-template-columns: 130px 1fr;
+      gap: 4px 14px;
+      background: #f5f7fb;
+      border: 1px solid #dde5f2;
+      border-radius: 6px;
+      padding: 12px 14px;
+      margin: 16px 0 20px;
+    }
+    .meta strong {
+      color: #23314a;
+    }
+    .toc {
+      background: #fbfcff;
+      border: 1px solid #d9e2ef;
+      border-radius: 6px;
+      padding: 12px 18px;
+      margin: 18px 0 24px;
+    }
+    .toc ol {
+      margin: 6px 0 0 22px;
+      padding: 0;
+    }
+    .callout {
+      border-left: 4px solid #1f5eff;
+      background: #f2f6ff;
+      padding: 10px 14px;
+      margin: 14px 0;
+      border-radius: 0 6px 6px 0;
+    }
+    .warn {
+      border-left-color: #d97706;
+      background: #fff8ed;
+    }
+    .ok {
+      border-left-color: #16835d;
+      background: #f0fbf6;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0 18px;
+      font-size: 10.2pt;
+    }
+    th, td {
+      border: 1px solid #cdd6e3;
+      padding: 7px 8px;
+      vertical-align: top;
+    }
+    th {
+      background: #eef3fb;
+      color: #1b2b45;
+      font-weight: 700;
+    }
+    code {
+      font-family: "DejaVu Sans Mono", "Consolas", monospace;
+      background: #eef2f7;
+      padding: 1px 4px;
+      border-radius: 3px;
+      font-size: 9.5pt;
+    }
+    pre {
+      font-family: "DejaVu Sans Mono", "Consolas", monospace;
+      background: #101827;
+      color: #f7fbff;
+      border-radius: 6px;
+      padding: 11px 13px;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      font-size: 9.2pt;
+      line-height: 1.48;
+      margin: 10px 0 16px;
+    }
+    .formula {
+      font-family: "DejaVu Sans", "Noto Sans CJK SC", sans-serif;
+      background: #f8fafc;
+      border: 1px solid #dde5f2;
+      border-radius: 6px;
+      padding: 10px 12px;
+      margin: 10px 0 14px;
+      font-size: 11pt;
+    }
+    figure {
+      margin: 18px 0 22px;
+      page-break-inside: avoid;
+    }
+    figure img {
+      display: block;
+      width: 100%;
+      max-width: 900px;
+      border: 1px solid #d2dbe8;
+      border-radius: 6px;
+    }
+    figcaption {
+      color: #5b687a;
+      font-size: 9.6pt;
+      margin-top: 7px;
+      text-align: center;
+    }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .card {
+      border: 1px solid #d9e2ef;
+      border-radius: 6px;
+      padding: 10px 12px;
+      background: #ffffff;
+    }
+    .small {
+      font-size: 9.5pt;
+      color: #5b687a;
+    }
+    .page-break {
+      page-break-before: always;
+    }
+  </style>
+</head>
+<body>
+  <h1>单基地被动 UAV 逐 Snapshot MDS 验证程序说明书</h1>
+  <p class="subtitle">文件夹：<code>monostatic_passive_uav_mds/</code>；用途：解释程序结构、物理模型、代码分段、输出图和验证方法。</p>
+
+  <div class="meta">
+    <strong>实验路线</strong><span>逐 snapshot 更新散射点位置，重跑 Sionna RT <code>PathSolver</code>。</span>
+    <strong>雷达模型</strong><span>BS 是唯一发射机，UAV 机身和叶片点作为被动 probe receiver。</span>
+    <strong>回波构造</strong><span>先求一程信道 <code>h_k(t)</code>，再用 <code>h_k(t)^2</code> 近似单基地往返相位和路径损耗。</span>
+    <strong>默认输出</strong><span><code>outputs/figures/monostatic_passive_uav_mds.png</code>、<code>outputs/data/monostatic_passive_uav_mds.npz</code>、<code>outputs/logs/*.txt</code>。</span>
+  </div>
+
+  <div class="toc">
+    <strong>目录</strong>
+    <ol>
+      <li>实验目标</li>
+      <li>文件夹结构说明</li>
+      <li>物理建模说明</li>
+      <li>主程序代码分段讲解</li>
+      <li>验证脚本代码分段讲解</li>
+      <li>结果图解释</li>
+      <li>日志与验收指标解释</li>
+      <li>如何运行</li>
+      <li>当前模型边界与下一步</li>
+    </ol>
+  </div>
+
+  <h2>1. 实验目标</h2>
+  <p>这个文件夹的目标是验证一种更接近雷达语义的 UAV 微多普勒数据生成链路：不再把叶片点当作主动发射机，而是让 BS/Radar 作为唯一发射机，UAV 只是被动散射目标。程序每隔一个 snapshot 更新时间，机身向前平动，旋翼中心跟随机身移动，叶片上的多个散射点绕旋翼中心做圆周运动，然后重新调用 Sionna RT 求解一程传播路径。</p>
+
+  <div class="callout">
+    <strong>一句话理解：</strong>这不是“静态 RT + 后处理调制”的快速模型，而是“每一帧都移动 UAV 散射点 + 每一帧都重跑 PathSolver”的验证模型；它更慢，但更适合证明几何位置、相干相位和 MDS 频谱是否一致。
+  </div>
+
+  <h2>2. 文件夹结构说明</h2>
+  <table>
+    <thead>
+      <tr><th>路径</th><th>作用</th><th>为什么需要</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>rt_monostatic_passive_uav_mds.py</code></td>
+        <td>主程序。创建 Sionna 场景，计算 UAV 散射点轨迹，逐帧运行 <code>PathSolver</code>，生成单基地被动回波，并输出 MDS 图和数据。</td>
+        <td>这是整个实验链路的核心。</td>
+      </tr>
+      <tr>
+        <td><code>validate_monostatic_passive_uav_mds.py</code></td>
+        <td>自动验证脚本。检查几何位置、STFT 输出、理论 Doppler、一致性、相位连续性和四个消融实验。</td>
+        <td>防止图看起来像对了，但模型或频率轴实际错了。</td>
+      </tr>
+      <tr>
+        <td><code>outputs/figures/</code></td>
+        <td>保存图像，目前包含默认 MDS 结果图。</td>
+        <td>用于组会展示和人工检查。</td>
+      </tr>
+      <tr>
+        <td><code>outputs/data/</code></td>
+        <td>保存 <code>.npz</code> 数据，包括复信号、STFT、散射点轨迹、理论频率和路径统计。</td>
+        <td>后续可以复现实验、画新图、做进一步分析。</td>
+      </tr>
+      <tr>
+        <td><code>outputs/logs/</code></td>
+        <td>保存 summary 和 validation report。</td>
+        <td>记录关键参数、理论值、实测值和验证结果。</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>3. 物理建模说明</h2>
+  <h3>3.1 单基地被动反射</h3>
+  <p>旧的逐帧 RT 脚本通常把叶片点建成 <code>Transmitter</code>，再让 radar 作为 <code>Receiver</code> 接收，这本质上是一程通信链路。这里改成：场景中只有一个 <code>Transmitter</code>，也就是 BS/Radar；UAV 上的机身点和叶片散射点只是 probe <code>Receiver</code>，用于测量 BS 到该散射点的一程复信道。</p>
+
+  <div class="formula">
+    一程信道：h<sub>k</sub>(t) = Σ<sub>p</sub> a<sub>k,p</sub>(t)<br>
+    单基地被动回波近似：s<sub>k</sub>(t) = w<sub>k</sub> · h<sub>k</sub>(t)<sup>2</sup><br>
+    总接收信号：s(t) = Σ<sub>k</sub> s<sub>k</sub>(t)
+  </div>
+
+  <p>平方 <code>h_k(t)^2</code> 的意义是：如果 BS 到散射点的一程相位是 <code>exp(-j·2πR/λ)</code>，单基地往返相位就是 <code>exp(-j·4πR/λ)</code>。因此平方可以把一程相位和一程路径损耗变成往返相位和往返路径损耗。</p>
+
+  <h3>3.2 机身平动和旋翼运动</h3>
+  <p>机身位置按匀速模型更新，旋翼中心是机身位置加固定偏移，叶片散射点再绕旋翼中心旋转。最终每个叶片点的绝对位置是三部分相加。</p>
+  <div class="formula">
+    body(t) = body<sub>0</sub> + V · t<br>
+    rotor<sub>j</sub>(t) = body(t) + offset<sub>j</sub><br>
+    blade<sub>j,b,m</sub>(t) = rotor<sub>j</sub>(t) + ρ<sub>m</sub>[cos(ωt + φ), sin(ωt + φ), 0]
+  </div>
+  <p>这里 <code>points_per_blade=3</code>，所以每片叶片不是只取叶尖一个点，而是沿半径方向取 3 个点。四旋翼、每个旋翼 2 片叶片，因此叶片散射点数为 <code>4 × 2 × 3 = 24</code>，加上机身点，一共 <code>25</code> 个散射体。</p>
+
+  <h2>4. 主程序代码分段讲解</h2>
+  <h3>4.1 配置类：集中管理所有物理和仿真参数</h3>
+  <p><code>PassiveUavMdsConfig</code> 是主程序的参数中心。它把场景、采样率、载频、BS 位置、机身速度、旋翼结构、STFT 参数、输出路径都放在一个 dataclass 里。</p>
+  <pre>class PassiveUavMdsConfig:
+    scene = "floor_wall"
+    snapshots = 1024
+    fs = 2000.0
+    fc = 28e9
+    body_speed = 1.0
+    blade_radius = 0.02
+    rotation_freq = 20.0
+    points_per_blade = 3</pre>
+  <p>这个类还提供派生量，例如波长 <code>wavelength</code>、采样时间 <code>t_vec</code>、Nyquist 频率、机身速度向量、散射体数量、STFT 频率分辨率等。这样后面的代码不用反复手算这些值。</p>
+
+  <h3>4.2 CLI 参数：让实验可以快速切换配置</h3>
+  <p><code>parse_args()</code> 定义命令行参数，例如 <code>--body-speed</code>、<code>--rotation-freq</code>、<code>--blade-weight</code>。这使同一个程序可以跑默认实验，也可以跑消融实验。</p>
+  <pre>python monostatic_passive_uav_mds/rt_monostatic_passive_uav_mds.py \
+  --rotation-freq 0 --no-noise</pre>
+  <p>上面这个命令就是“无旋转”消融实验，用来确认没有旋翼运动时 MDS 不会出现微多普勒展宽。</p>
+
+  <h3>4.3 几何轨迹：计算每个 snapshot 的散射点位置</h3>
+  <p><code>scatterer_state(cfg, t)</code> 是几何建模的核心。给定时间 <code>t</code>，它返回所有散射点的位置、速度、权重、标签、所属旋翼和半径。</p>
+  <pre>body_pos = body_position(cfg, t)
+rotor_centers = body_pos[np.newaxis, :] + rotor_offsets
+blade_point = rotor_center + [rho*cos(angle), rho*sin(angle), 0]</pre>
+  <p><code>scatterer_trajectories(cfg)</code> 则把所有时间点的 <code>scatterer_state</code> 堆叠起来，得到完整轨迹张量。验证脚本会用它检查机身是否真的平动、旋翼中心是否真的跟随机身、叶片点半径是否保持不变。</p>
+
+  <h3>4.4 理论 Doppler：给 STFT 结果提供参考线</h3>
+  <p><code>theory_metrics(cfg)</code> 根据散射点速度和视线方向估计理论频率范围。机身平动给出 body Doppler，叶片转动给出 micro-Doppler peak。</p>
+  <div class="formula">
+    f<sub>mono</sub>(t) ≈ -2 · range_rate(t) / λ
+  </div>
+  <p>默认实验中，理论 body Doppler 为 <code>-186.796 Hz</code>，理论 micro-Doppler peak 为 <code>469.468 Hz</code>，因此预期 MDS 主要分布在 <code>[-656.264, 282.672] Hz</code> 附近。</p>
+
+  <h3>4.5 Sionna 场景：BS 是唯一发射机，UAV 是多个 probe receiver</h3>
+  <p><code>setup_scene(cfg)</code> 加载 Sionna 内置场景，设置频率和天线阵列，然后只添加一个 <code>Transmitter(name="bs_radar")</code>。所有 UAV 散射点都添加为 <code>Receiver</code>，命名为 <code>probe_00_body</code>、<code>probe_01_rotor0_blade0_...</code> 等。</p>
+  <pre>scene.add(Transmitter(name="bs_radar", position=cfg.bs_position))
+scene.add(Receiver(name="probe_00_body", position=body_pos))
+scene.add(Receiver(name="probe_01_rotor0_blade0_rho...", position=blade_pos))</pre>
+  <div class="callout ok">
+    <strong>关键点：</strong>这里 UAV 散射点不是 active TX。它们只是用来探测 BS 到散射点的一程信道，因此符合“TX 是 BS，UAV 是被动反射体”的建模意图。
+  </div>
+
+  <h3>4.6 逐帧 PathSolver：每一帧都更新位置并重追踪</h3>
+  <p><code>run_simulation(cfg)</code> 中的循环是逐 snapshot 路线的核心。每一帧先更新所有 probe receiver 的位置，再调用 <code>PathSolver</code>，然后从 CIR 中求出每个散射点的一程复信道。</p>
+  <pre>for idx in range(cfg.snapshots):
+    update_probe_positions(scene, probe_names, positions[idx])
+    a = run_solver(scene, solver, cfg)
+    h = one_way_channels_by_rx(a, cfg.n_scatterers)
+    signal_clean[idx] = monostatic_return(h, weights)</pre>
+  <p>这一步比后处理调制慢得多，因为默认 1024 帧会运行 1024 次 <code>PathSolver</code>。但它的好处是每个 snapshot 的几何位置都真实进入了 Sionna RT。</p>
+
+  <h3>4.7 被动回波、噪声和 STFT</h3>
+  <p><code>monostatic_return()</code> 对每个散射点执行 <code>weight_k * h_k * h_k</code>，并把所有散射点相干求和。然后程序可选加入 AWGN，最后用 <code>compute_spectrogram()</code> 做复数 STFT。</p>
+  <pre>return complex(np.sum(weights * one_way_h * one_way_h))</pre>
+  <p>STFT 使用 Hann 窗、双边频谱和 <code>fftshift</code>，因此频率轴是零中心 Doppler 频率轴。默认 <code>stft_win=256</code>、<code>fs=2000 Hz</code>，频率分辨率为 <code>7.8125 Hz</code>。</p>
+
+  <h3>4.8 保存数据、图和日志</h3>
+  <p><code>save_outputs()</code> 统一保存三类产物：压缩数据 <code>.npz</code>、结果图 <code>.png</code> 和 summary 文本。数据文件中包含复信号、干净信号、STFT、散射点位置、速度、理论频率、路径统计和配置 JSON。</p>
+
+  <h2>5. 验证脚本代码分段讲解</h2>
+  <p><code>validate_monostatic_passive_uav_mds.py</code> 的作用不是重新生成正式图，而是用较小规模参数自动验证关键物理和数值性质。</p>
+
+  <table>
+    <thead>
+      <tr><th>测试函数</th><th>检查内容</th><th>意义</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>test_geometry()</code></td>
+        <td>检查 <code>body(t)=body0+Vt</code>，旋翼中心跟随机身，叶片点半径保持等于指定 <code>rho</code>。</td>
+        <td>证明父子运动关系正确。</td>
+      </tr>
+      <tr>
+        <td><code>test_stft_output()</code></td>
+        <td>检查频率轴单调、零中心、<code>S_dB</code> shape 正确、最大值归一到 0 dB。</td>
+        <td>证明 MDS 频率轴和矩阵维度可靠。</td>
+      </tr>
+      <tr>
+        <td><code>test_default_rt_signal_and_doppler()</code></td>
+        <td>检查信号非零有限，STFT 主峰接近理论 body Doppler，误差不超过一个频率 bin。</td>
+        <td>证明 standard Doppler 位置正确。</td>
+      </tr>
+      <tr>
+        <td><code>test_phase_continuity()</code></td>
+        <td>对无噪声信号 unwrap 相位，检查相邻相位差没有非物理尖峰，瞬时频率不超过 Nyquist。</td>
+        <td>证明相干相位没有明显断裂或混叠。</td>
+      </tr>
+      <tr>
+        <td><code>test_ablations()</code></td>
+        <td>运行无旋转、无机身平动、关闭叶片、关闭机身四个消融实验。</td>
+        <td>证明谱图结构来自对应物理机制，而不是偶然图案。</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="callout ok">
+    <strong>当前验证结果：</strong><code>geometry</code>、<code>stft_output</code>、<code>default_rt_signal_and_doppler</code>、<code>phase_continuity</code>、<code>ablations</code> 全部通过。
+  </div>
+
+  <h2>6. 结果图解释</h2>
+  <figure>
+    <img src="outputs/figures/monostatic_passive_uav_mds.png" alt="Monostatic passive UAV MDS result">
+    <figcaption>图 1：默认 1024 snapshot 单基地被动 UAV MDS 验证结果。图中白色虚线/点线为理论 body Doppler 和 body ± micro-Doppler peak 参考范围。</figcaption>
+  </figure>
+
+  <h3>6.1 左上：STFT / Micro-Doppler spectrogram</h3>
+  <p>横轴是时间，纵轴是 Doppler 频率，颜色表示归一化 STFT 幅度。白色虚线表示理论机身 Doppler，白色点线表示理论展宽范围。默认实验中，机身 Doppler 约为 <code>-186.8 Hz</code>，旋翼产生约 <code>±469.5 Hz</code> 的微多普勒展宽。</p>
+
+  <h3>6.2 右上：Doppler profile</h3>
+  <p>这个子图把 MDS 沿时间方向取最大值，显示整个观测期间出现过的频率能量。它用于检查 STFT 主峰是否接近理论 body Doppler，以及能量展宽是否落在理论范围附近。</p>
+
+  <h3>6.3 左下：Body and blade sample trajectory</h3>
+  <p>该图显示 BS/Radar、机身轨迹、一个旋翼中心轨迹和第一个叶片散射点轨迹。它直观展示：机身向前平动，旋翼中心跟随机身，叶片散射点在局部圆周运动的同时整体跟随机身移动。</p>
+
+  <h3>6.4 右下：Instantaneous frequency diagnostic</h3>
+  <p>该图对干净复信号做相位解缠并求导，展示瞬时频率诊断。它不是最终分类特征，而是用于检查相位是否连续、是否接近 Nyquist 边界、是否出现异常跳变。</p>
+
+  <h2>7. 日志与验收指标解释</h2>
+  <table>
+    <thead>
+      <tr><th>指标</th><th>当前值</th><th>解释</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>场景</td><td><code>floor_wall</code></td><td>使用 Sionna 内置简化地板/墙体场景，默认 <code>max_depth=0</code>，平均路径数为 1。</td></tr>
+      <tr><td>载频 / 波长</td><td><code>28 GHz / 10.707 mm</code></td><td>毫米波频段，微多普勒对速度更敏感。</td></tr>
+      <tr><td>snapshot / fs</td><td><code>1024 @ 2000 Hz</code></td><td>逐帧重跑 RT，共 1024 个复信号采样点。</td></tr>
+      <tr><td>STFT 窗长 / 频率分辨率</td><td><code>256 / 7.81 Hz</code></td><td>主峰验收误差使用这个 frequency bin 作为尺度。</td></tr>
+      <tr><td>散射点数</td><td><code>25</code></td><td>1 个机身点 + 4×2×3 个叶片径向散射点。</td></tr>
+      <tr><td>理论 body Doppler</td><td><code>-186.796 Hz</code></td><td>机身整体平动产生的 standard Doppler。</td></tr>
+      <tr><td>理论 micro-Doppler peak</td><td><code>469.468 Hz</code></td><td>叶片散射点旋转速度投影产生的最大展宽。</td></tr>
+      <tr><td>理论支持范围</td><td><code>[-656.264, 282.672] Hz</code></td><td>约等于 body Doppler ± micro-Doppler peak。</td></tr>
+      <tr><td>STFT 主峰</td><td><code>-187.500 Hz</code></td><td>与理论 body Doppler 的误差约 0.704 Hz，小于一个 bin。</td></tr>
+      <tr><td>STFT 支持范围</td><td><code>[-671.875, 296.875] Hz @ -35 dB</code></td><td>与理论范围接近，边界差异来自窗函数、谱泄漏和阈值。</td></tr>
+      <tr><td>运行耗时</td><td><code>75.25 s</code></td><td>逐帧 PathSolver 的代价，后续高精度参数会更慢。</td></tr>
+      <tr><td>验证报告</td><td><code>ALL TESTS PASSED</code></td><td>几何、STFT、Doppler、相位连续性和消融实验均通过。</td></tr>
+    </tbody>
+  </table>
+
+  <h2>8. 如何运行</h2>
+  <h3>8.1 默认运行</h3>
+  <pre>python monostatic_passive_uav_mds/rt_monostatic_passive_uav_mds.py</pre>
+  <p>默认会运行 1024 个 snapshot，生成正式的 MDS 图、数据和 summary。这个命令比较慢，因为会重跑 1024 次 <code>PathSolver</code>。</p>
+
+  <h3>8.2 快速烟测</h3>
+  <pre>python monostatic_passive_uav_mds/rt_monostatic_passive_uav_mds.py \
+  --snapshots 64 --fs 2000 --stft-win 32 --no-noise --max-depth 0</pre>
+  <p>用于快速确认脚本是否能跑通。它生成的谱图时间长度较短，不适合作为最终展示图。</p>
+
+  <h3>8.3 自动验证</h3>
+  <pre>python monostatic_passive_uav_mds/validate_monostatic_passive_uav_mds.py</pre>
+  <p>该命令会自动运行几何、STFT、Doppler、相位连续性和消融实验测试，并把结果写入 <code>outputs/logs/validation_report.txt</code>。</p>
+
+  <h3>8.4 四个消融实验</h3>
+  <table>
+    <thead>
+      <tr><th>Case</th><th>命令</th><th>预期现象</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>A：无旋转</td>
+        <td><code>--rotation-freq 0 --no-noise</code></td>
+        <td>MDS 不应出现明显 micro-Doppler 展宽，只保留机身 Doppler 附近稳定分量。</td>
+      </tr>
+      <tr>
+        <td>B：无机身平动</td>
+        <td><code>--body-speed 0 --no-noise</code></td>
+        <td>MDS 主要围绕 0 Hz 展宽。</td>
+      </tr>
+      <tr>
+        <td>C：关闭叶片散射</td>
+        <td><code>--blade-weight 0 --no-noise</code></td>
+        <td>MDS 只剩机身 standard Doppler 水平线。</td>
+      </tr>
+      <tr>
+        <td>D：关闭机身散射</td>
+        <td><code>--body-weight 0 --no-noise</code></td>
+        <td>机身 Doppler 线显著减弱，旋翼 micro-Doppler 分量更突出。</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>9. 当前模型边界与下一步</h2>
+  <div class="callout warn">
+    <strong>模型边界：</strong>当前程序是点散射体级别的被动单基地验证。它通过 <code>h_k(t)^2</code> 构造往返回波，但还不是完整叶片网格的高保真电磁散射，也没有引入真实叶片 RCS 随角度、极化、材料和遮挡变化的模型。
+  </div>
+
+  <p>当前模型适合做三件事：第一，验证“机身平动 + 旋翼相对运动”的父子几何关系；第二，验证单基地往返相位和 Doppler 频率是否与理论一致；第三，为后续完整叶片网格、RCS 标定和更复杂多径场景提供一个可工作的基线。</p>
+
+  <h3>后续可扩展方向</h3>
+  <ol>
+    <li>把多散射点叶片替换为完整叶片网格，或从完整网格离散出更多散射点。</li>
+    <li>给叶片散射点加入角度相关 RCS 权重，例如 <code>w_k(t)=w_0|cos(α_k(t))|^p</code>。</li>
+    <li>开启 <code>max_depth &gt; 0</code>，研究地面/墙体/建筑物多径对 MDS 的影响。</li>
+    <li>把默认缩放参数升级到真实高精度参数，例如 <code>R=0.15 m</code>、<code>f_rot=100 Hz</code>、<code>fs=50 kHz</code>，但需要接受逐帧 RT 的长耗时。</li>
+  </ol>
+
+  <p class="small">说明书生成说明：本 HTML 使用纯本地 CSS 和相对图片路径，不依赖外部网络资源；可直接用 WeasyPrint 转为 PDF。</p>
+</body>
+</html>
