@@ -1,0 +1,4 @@
+RT_dataset/Server_performance_eval/benchmark_4090_task_limit.py --gpu-id 0 --max-workers 8 --timeout-s 900 --run-name quick_4090_20260701_1441
+
+Worker command template:
+/home/zfh/miniconda3/envs/sionna_rt/bin/python /home/zfh/SionnaEM/RT_dataset/scripts/build_rt_uav_stft_dataset.py --root /home/zfh/SionnaEM/RT_dataset/Server_performance_eval/runs/quick_4090_20260701_1441/concurrency_NN/worker_XX_dataset --config /home/zfh/SionnaEM/RT_dataset/configs/rt_dataset_config.yaml --samples-per-class 1 --classes pitch30_v10 --snapshot-override 256 --rt-snapshot-stride 4

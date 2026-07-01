@@ -1,0 +1,17 @@
+concurrency,status,elapsed_s,samples_written,samples_per_second,peak_memory_used_mb,peak_gpu_util_percent,failure_reason,stage_dir
+9,PASS,6.004,9,1.498986,7288,99,,/home/zfh/SionnaEM/RT_dataset/Server_performance_eval/runs/quick_4090_20260701_1441_ext9_24/concurrency_09
+10,PASS,6.006,10,1.665123,8089,99,,/home/zfh/SionnaEM/RT_dataset/Server_performance_eval/runs/quick_4090_20260701_1441_ext9_24/concurrency_10
+11,PASS,6.005,11,1.831950,8898,99,,/home/zfh/SionnaEM/RT_dataset/Server_performance_eval/runs/quick_4090_20260701_1441_ext9_24/concurrency_11
+12,PASS,7.006,12,1.712919,9712,99,,/home/zfh/SionnaEM/RT_dataset/Server_performance_eval/runs/quick_4090_20260701_1441_ext9_24/concurrency_12
+13,PASS,7.005,13,1.855775,10515,99,,/home/zfh/SionnaEM/RT_dataset/Server_performance_eval/runs/quick_4090_20260701_1441_ext9_24/concurrency_13
+14,PASS,8.005,14,1.748820,11318,99,,/home/zfh/SionnaEM/RT_dataset/Server_performance_eval/runs/quick_4090_20260701_1441_ext9_24/concurrency_14
+15,PASS,8.006,15,1.873633,12126,99,,/home/zfh/SionnaEM/RT_dataset/Server_performance_eval/runs/quick_4090_20260701_1441_ext9_24/concurrency_15
+16,PASS,9.009,16,1.775932,12943,99,,/home/zfh/SionnaEM/RT_dataset/Server_performance_eval/runs/quick_4090_20260701_1441_ext9_24/concurrency_16
+17,PASS,9.012,17,1.886363,13756,98,,/home/zfh/SionnaEM/RT_dataset/Server_performance_eval/runs/quick_4090_20260701_1441_ext9_24/concurrency_17
+18,PASS,9.010,18,1.997880,14528,99,,/home/zfh/SionnaEM/RT_dataset/Server_performance_eval/runs/quick_4090_20260701_1441_ext9_24/concurrency_18
+19,PASS,10.012,19,1.897710,15337,99,,/home/zfh/SionnaEM/RT_dataset/Server_performance_eval/runs/quick_4090_20260701_1441_ext9_24/concurrency_19
+20,PASS,11.016,20,1.815488,16176,99,,/home/zfh/SionnaEM/RT_dataset/Server_performance_eval/runs/quick_4090_20260701_1441_ext9_24/concurrency_20
+21,PASS,13.014,21,1.613635,16945,99,,/home/zfh/SionnaEM/RT_dataset/Server_performance_eval/runs/quick_4090_20260701_1441_ext9_24/concurrency_21
+22,PASS,12.029,22,1.828986,17771,99,,/home/zfh/SionnaEM/RT_dataset/Server_performance_eval/runs/quick_4090_20260701_1441_ext9_24/concurrency_22
+23,PASS,13.024,23,1.765982,18598,99,,/home/zfh/SionnaEM/RT_dataset/Server_performance_eval/runs/quick_4090_20260701_1441_ext9_24/concurrency_23
+24,PASS,15.029,24,1.596885,19407,98,,/home/zfh/SionnaEM/RT_dataset/Server_performance_eval/runs/quick_4090_20260701_1441_ext9_24/concurrency_24

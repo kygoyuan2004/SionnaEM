@@ -1,0 +1,2 @@
+sample_id,class_id,num_snapshots,rt_snapshot_stride,rt_snapshots_solved,rt_elapsed_s,sample_elapsed_s,rt_elapsed_per_solved_snapshot_s,created_time
+pitch30_v10_0000,pitch30_v10,256,4,65,6.741369678056799,13.858078542049043,0.10371337966241229,2026-07-01T14:47:05+08:00
