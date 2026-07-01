@@ -1,0 +1,57 @@
+scene_name: floor_wall
+scene_channel_model: sionna_rt_pathsolver
+scene_xml_path: ""
+scene_validate_xml: false
+scene_require_xml: false
+scene_use_xml_tx_position: false
+scene_tx_name: bs_radar
+scene_notes: "Full Sionna RT PathSolver dataset. Each RT snapshot updates passive UAV probe receivers and solves BS-to-probe paths."
+carrier_frequency_hz: 28.0e9
+sampling_rate_hz: 20000
+num_snapshots: 2048
+
+rotor_frequency_hz: 25
+blade_radius_m: 0.02
+rotor_arm_length_m: 0.08
+num_uavs: 1
+num_rotors: 4
+num_blades_per_rotor: 2
+points_per_blade: 3
+
+stft_window_size: 48
+stft_overlap: 36
+stft_nfft: 512
+doppler_plot_min_hz: -3200
+doppler_plot_max_hz: 1200
+stft_dynamic_range_db: 55
+
+noise_snr_db: 30
+samples_per_class: 10
+random_seed: 20260630
+
+bs_position_x: -20.0
+bs_position_y: 0.0
+bs_position_z: 3.0
+body_position_x: 0.0
+body_position_y: 0.0
+body_position_z: 3.0
+
+rotor_frequency_jitter_fraction: 0.10
+blade_radius_jitter_fraction: 0.10
+noise_snr_min_db: 20
+noise_snr_max_db: 40
+position_jitter_m: 0.05
+scatterer_weight_jitter_fraction: 0.20
+
+rt_max_depth: 2
+rt_los: true
+rt_specular_reflection: true
+rt_diffuse_reflection: false
+rt_diffraction: false
+rt_edge_diffraction: false
+rt_refraction: false
+rt_synthetic_array: false
+rt_cir_sampling_frequency_hz: 122.88e6
+rt_snapshot_stride: 1
+rt_interpolation: linear_complex
+rt_resume: true

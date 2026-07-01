@@ -1,0 +1,8 @@
+concurrency,status,elapsed_s,samples_written,samples_per_second,peak_memory_used_mb,peak_gpu_util_percent,failure_reason,stage_dir
+25,PASS,14.030,25,1.781837,20183,98,,/home/zfh/SionnaEM/RT_dataset/Server_performance_eval/runs/quick_4090_20260701_1441_ext25_36/concurrency_25
+26,PASS,16.056,26,1.619358,21022,99,,/home/zfh/SionnaEM/RT_dataset/Server_performance_eval/runs/quick_4090_20260701_1441_ext25_36/concurrency_26
+27,PASS,16.116,27,1.675311,21817,99,,/home/zfh/SionnaEM/RT_dataset/Server_performance_eval/runs/quick_4090_20260701_1441_ext25_36/concurrency_27
+28,PASS,17.062,28,1.641070,22621,99,,/home/zfh/SionnaEM/RT_dataset/Server_performance_eval/runs/quick_4090_20260701_1441_ext25_36/concurrency_28
+29,PASS,18.145,29,1.598268,21582,99,,/home/zfh/SionnaEM/RT_dataset/Server_performance_eval/runs/quick_4090_20260701_1441_ext25_36/concurrency_29
+30,PASS,19.197,30,1.562731,22631,98,,/home/zfh/SionnaEM/RT_dataset/Server_performance_eval/runs/quick_4090_20260701_1441_ext25_36/concurrency_30
+31,FAIL,18.239,23,1.261037,24091,99,"non-zero return code: worker 4 rc=-6, worker 8 rc=-6, worker 9 rc=1, worker 10 rc=-6, worker 12 rc=-6, worker 23 rc=-6, worker 24 rc=1, worker 29 rc=-6",/home/zfh/SionnaEM/RT_dataset/Server_performance_eval/runs/quick_4090_20260701_1441_ext25_36/concurrency_31

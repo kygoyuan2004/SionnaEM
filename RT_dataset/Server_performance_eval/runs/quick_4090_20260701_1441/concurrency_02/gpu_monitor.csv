@@ -1,0 +1,4 @@
+unix_time,local_time,gpu_id,name,memory_used_mb,memory_total_mb,gpu_util_percent,power_w,temperature_c
+1782888098.865,2026-07-01T14:41:38,0,NVIDIA GeForce RTX 4090,15,24564,1,64.50,35
+1782888099.880,2026-07-01T14:41:39,0,NVIDIA GeForce RTX 4090,865,24564,0,66.01,35
+1782888100.897,2026-07-01T14:41:40,0,NVIDIA GeForce RTX 4090,1633,24564,45,81.53,37

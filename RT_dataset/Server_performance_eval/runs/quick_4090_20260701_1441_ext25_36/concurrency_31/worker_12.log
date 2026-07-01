@@ -1,0 +1,20 @@
+# Command
+/home/zfh/miniconda3/envs/sionna_rt/bin/python /home/zfh/SionnaEM/RT_dataset/scripts/build_rt_uav_stft_dataset.py --root /home/zfh/SionnaEM/RT_dataset/Server_performance_eval/runs/quick_4090_20260701_1441_ext25_36/concurrency_31/worker_12_dataset --config /home/zfh/SionnaEM/RT_dataset/configs/rt_dataset_config.yaml --samples-per-class 1 --classes pitch30_v10 --snapshot-override 256 --rt-snapshot-stride 4
+
+[1/1] generating pitch30_v10_0000
+
+Dr.Jit encountered an unrecoverable error and will now shut
+down. Please re-run your program in debug mode to check for
+out-of-bounds reads, writes, and other sources of undefined
+behavior. You can do so by calling
+
+   dr.set_flag(dr.JitFlag.Debug, True)
+
+at the beginning of the program. If these additional checks
+fail to pinpoint the problem, then you have likely found a
+bug. We are happy to help investigate and fix the problem if
+you can you create a self-contained reproducer and submit it
+at https://github.com/mitsuba-renderer/drjit.
+
+The error message of this specific failure is as follows:
+>>> cuda_check(): API error 0002 (CUDA_ERROR_OUT_OF_MEMORY): "out of memory" in /project/ext/drjit-core/src/eval.cpp:586.

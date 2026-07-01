@@ -1,0 +1,37 @@
+# Command
+/home/zfh/miniconda3/envs/sionna_rt/bin/python /home/zfh/SionnaEM/RT_dataset/scripts/build_rt_uav_stft_dataset.py --root /home/zfh/SionnaEM/RT_dataset/Server_performance_eval/runs/quick_4090_20260701_1441_ext25_36/concurrency_31/worker_24_dataset --config /home/zfh/SionnaEM/RT_dataset/configs/rt_dataset_config.yaml --samples-per-class 1 --classes pitch30_v10 --snapshot-override 256 --rt-snapshot-stride 4
+
+[1/1] generating pitch30_v10_0000
+jit_flush_malloc_cache(): Dr.Jit exhausted the available memory and had to flush its allocation cache to free up additional memory. This is an expensive operation and will have a negative effect on performance. You may want to change your computation so that it uses less memory. This warning will only be displayed once.
+Traceback (most recent call last):
+  File "/home/zfh/miniconda3/envs/sionna_rt/lib/python3.11/site-packages/sionna/rt/path_solvers/paths_buffer.py", line 552, in _loop_body
+    dr.scatter(self._shapes.array, shapes, indices_t, active)
+RuntimeError: jit_malloc(): out of memory! Could not allocate 8388608 bytes of device memory.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/zfh/SionnaEM/RT_dataset/scripts/build_rt_uav_stft_dataset.py", line 687, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/home/zfh/SionnaEM/RT_dataset/scripts/build_rt_uav_stft_dataset.py", line 665, in main
+    row = generate_case(
+          ^^^^^^^^^^^^^^
+  File "/home/zfh/SionnaEM/RT_dataset/scripts/build_rt_uav_stft_dataset.py", line 428, in generate_case
+    a = run_solver(scene, solver, cfg)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zfh/SionnaEM/RT_dataset/scripts/build_rt_uav_stft_dataset.py", line 243, in run_solver
+    paths = solver(
+            ^^^^^^^
+  File "/home/zfh/miniconda3/envs/sionna_rt/lib/python3.11/site-packages/sionna/rt/path_solvers/path_solver.py", line 195, in __call__
+    paths_buffer = self._candidate_generator(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zfh/miniconda3/envs/sionna_rt/lib/python3.11/site-packages/sionna/rt/path_solvers/sb_candidate_generator.py", line 127, in __call__
+    self._los(mi_scene, src_positions, tgt_positions, paths,
+  File "/home/zfh/miniconda3/envs/sionna_rt/lib/python3.11/site-packages/sionna/rt/path_solvers/sb_candidate_generator.py", line 190, in _los
+    paths.add_paths(mi.UInt(0), path_ind, samples_data, valid, tgt_indices,
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zfh/miniconda3/envs/sionna_rt/lib/python3.11/site-packages/sionna/rt/path_solvers/paths_buffer.py", line 540, in add_paths
+    while d <= depth:
+^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: dr.while_loop(): encountered an exception (see above).

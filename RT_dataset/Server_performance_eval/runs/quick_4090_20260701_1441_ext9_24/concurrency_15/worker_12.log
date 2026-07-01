@@ -1,0 +1,9 @@
+# Command
+/home/zfh/miniconda3/envs/sionna_rt/bin/python /home/zfh/SionnaEM/RT_dataset/scripts/build_rt_uav_stft_dataset.py --root /home/zfh/SionnaEM/RT_dataset/Server_performance_eval/runs/quick_4090_20260701_1441_ext9_24/concurrency_15/worker_12_dataset --config /home/zfh/SionnaEM/RT_dataset/configs/rt_dataset_config.yaml --samples-per-class 1 --classes pitch30_v10 --snapshot-override 256 --rt-snapshot-stride 4
+
+[1/1] generating pitch30_v10_0000
+  pitch30_v10_0000: RT 16/65 solved snapshots
+  pitch30_v10_0000: RT 32/65 solved snapshots
+  pitch30_v10_0000: RT 48/65 solved snapshots
+  pitch30_v10_0000: RT 64/65 solved snapshots
+Done. Samples: 1
